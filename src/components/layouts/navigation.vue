@@ -11,22 +11,25 @@
             </v-list>
         </v-toolbar>
         <v-list>
-            <v-list-tile>
+
+            <v-list-tile to="/">
                 <v-list-tile-action>
                     <v-icon>home</v-icon>
                 </v-list-tile-action>
                 <v-list-tile-content>
-                    <v-list-tile-title>Home</v-list-tile-title>
+                    <v-list-tile-title >Главная</v-list-tile-title>
                 </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile>
+            <v-list-tile to="/TaskRRM">
                 <v-list-tile-action>
-                    <v-icon>contact_mail</v-icon>
+                    <v-icon></v-icon>
                 </v-list-tile-action>
                 <v-list-tile-content>
-                    <v-list-tile-title>Contact</v-list-tile-title>
+                    <v-list-tile-title >Задачи</v-list-tile-title>
                 </v-list-tile-content>
             </v-list-tile>
+
+
         </v-list>
     </v-navigation-drawer>
     <v-toolbar color="blue" dark fixed app>
@@ -39,11 +42,15 @@
 
 <script>
 export default {
-    data: () => ({
-        drawer: null
-    }),
-    props: {
-        source: String
+    data() {
+        return {
+            user: {
+                email: '',
+                password: ''
+            },
+            errorMessage: "",
+            drawer: null
+        }
     }
 }
 </script>
