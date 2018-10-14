@@ -1,36 +1,34 @@
 <template>
 <div>
-    <p> {{ locations }} </p>
+    <P> {{users}} </P>
 </div>
 </template>
 
 <script>
 import {
     db
-} from '../config/firebase.js'
+} from '../config/firebase.js';
 
 export default {
 
     data() {
         return {
-            users: {},
-            locations: []
+            users: {}
         }
     },
-    /* firebase: {
+    firebase: {
         users: {
             source: db.ref('books'),
-            // Optional, allows you to handle any errors.
             cancelCallback(err) {
                 console.error(err);
             }
         }
-    }, */
+    }/* ,
     firestore() {
         return {
-            locations: db.collection("books")
+            locations: booksColl
         }
-    }
+    } */
 
 }
 </script>

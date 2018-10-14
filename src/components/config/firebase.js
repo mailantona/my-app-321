@@ -1,7 +1,6 @@
 
 import firebase from 'firebase'
-import VueFire from 'vuefire'
-import 'firebase/firestore'
+/* import 'firebase/firestore' */
 
 var config = {
     apiKey: "AIzaSyCQjsM52FNFZ-0Qg39fcnmPa9Lj93TxtFE",
@@ -12,7 +11,7 @@ var config = {
     messagingSenderId: "703123305565"
   };
   export const firebaseApp = firebase.initializeApp(config);
+  export const db = firebaseApp.database();
+  /* export const db = firebase.firestore(); */
+
   
-  // Export the database for components to use.
-  /* export const db = firebaseApp.database(); */
-  export const db = firebase.firestore();
