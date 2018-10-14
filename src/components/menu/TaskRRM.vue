@@ -15,6 +15,7 @@
 export default {
     data() {
         return {
+            showForm: false,
             headers: [{
                     text: 'Dessert (100g serving)',
                     align: 'left',
