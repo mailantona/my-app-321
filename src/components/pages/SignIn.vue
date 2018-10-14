@@ -28,6 +28,9 @@
 
 <script>
 import firebase from 'firebase'
+import {
+    firebaseApp
+} from '../config/firebase.js'
 
 import {
     mapGetters,
@@ -46,7 +49,7 @@ export default {
     },
     methods: {
         SignIn() {
-            firebase.auth().signInWithEmailAndPassword(this.user.email + "@eaeconsult.ru", this.user.password)
+            firebaseApp.auth().signInWithEmailAndPassword(this.user.email + "@eaeconsult.ru", this.user.password)
                 .then(response => {
                     this.$store.commit('isSignInSet');
                     this.$store.commit('userLoginSettSet', {
