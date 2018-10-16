@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import firebase from 'firebase'
+/* import firebase from 'firebase' */
 import {
     firebaseApp
 } from '../config/firebase.js'

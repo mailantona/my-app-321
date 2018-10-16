@@ -2,12 +2,14 @@ import Vue from 'vue'
 import App from './App.vue'
 import Vuetify from 'vuetify'
 import VueFire from 'vuefire'
+import VeeValidate from 'vee-validate'
 
 
 import 'vuetify/dist/vuetify.css'
 import 'firebase/firestore'
 
 Vue.use(Vuetify)
+Vue.use(VeeValidate)
 Vue.use(VueFire)
 
 // Initialize Firebase

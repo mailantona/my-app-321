@@ -5,6 +5,7 @@ Vue.use(VueRouter);
 
 import Mainpage from "./components/menu/main.vue";
 import TaskRRM from "./components/menu/TaskRRM.vue";
+import directory from "./components/menu/directory.vue";
 import Firebase from "./components/menu/firebase.vue";
 import E404 from "./components/pages/E404.vue";
 
@@ -23,6 +24,11 @@ const routes = [
         name: 'TaskRRM',
         path: "/TaskRRM",
         component: TaskRRM
+    },
+    {
+        name: 'directory',
+        path: "/directory",
+        component: directory
     },
     {
       path: "*",

@@ -36,6 +36,14 @@
                     <v-list-tile-title >firebase</v-list-tile-title>
                 </v-list-tile-content>
             </v-list-tile>
+            <v-list-tile to="/directory">
+                <v-list-tile-action>
+                    <v-icon></v-icon>
+                </v-list-tile-action>
+                <v-list-tile-content>
+                    <v-list-tile-title >Справочники</v-list-tile-title>
+                </v-list-tile-content>
+            </v-list-tile>
 
 
         </v-list>

@@ -1,9 +1,22 @@
 <template>
 <div>
+    <v-layout>
+        <v-flex xs12 sm12 md10 lg10 xl6>
+            <v-card>
+                <v-card-title primary-title>
+                    <v-text-field v-model="booksNew.name" label="name"></v-text-field>
+   
+    
+                </v-card-title>
 
-    <v-flex xs6>
-        <v-text-field v-model="booksNew.name" label="name"></v-text-field>
-    </v-flex>
+                <v-card-actions>
+                    <v-btn flat color="orange">Share</v-btn>
+                    <v-btn flat color="orange">Explore</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-flex>
+    </v-layout>
+
     <v-flex xs6>
         <v-text-field v-model="booksNew.age" label="age"></v-text-field>
     </v-flex>

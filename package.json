@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "firebase": "^5.5.4",
+    "vee-validate": "^2.1.0-beta.11",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
     "vuefire": "^1.4.5",
