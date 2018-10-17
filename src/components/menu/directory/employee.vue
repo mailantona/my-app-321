@@ -11,25 +11,11 @@
                 </v-card-title>
 
                 <v-card-text>
-                    <v-container grid-list-md>
-                        <v-layout wrap>
-                            <v-flex xs12 sm6 md4>
-                                <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
-                            </v-flex>
-                            <v-flex xs12 sm6 md4>
-                                <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
-                            </v-flex>
-                            <v-flex xs12 sm6 md4>
-                                <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
-                            </v-flex>
-                            <v-flex xs12 sm6 md4>
-                                <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
-                            </v-flex>
-                            <v-flex xs12 sm6 md4>
-                                <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
-                            </v-flex>
-                        </v-layout>
-                    </v-container>
+                    <v-layout wrap>
+                        <v-flex>
+                            <v-text-field v-model="editedItem.name" label="ФИО" :counter="50" required v-validate="'required|max:50'" :error-messages="errors.collect('name')" data-vv-name="name"></v-text-field>
+                        </v-flex>
+                    </v-layout>
                 </v-card-text>
 
                 <v-card-actions>
@@ -40,14 +26,10 @@
             </v-card>
         </v-dialog>
     </v-toolbar>
-    <v-data-table :headers="headers" :items="desserts" hide-actions class="elevation-1">
+    <v-data-table :headers="headers" :items="employee" hide-actions class="elevation-1">
         <template slot="items" slot-scope="props">
             <td>{{ props.item.name }}</td>
-            <td class="text-xs-right">{{ props.item.calories }}</td>
-            <td class="text-xs-right">{{ props.item.fat }}</td>
-            <td class="text-xs-right">{{ props.item.carbs }}</td>
-            <td class="text-xs-right">{{ props.item.protein }}</td>
-            <td class="justify-center layout px-0">
+            <td>
                 <v-icon small class="mr-2" @click="editItem(props.item)">
                     edit
                 </v-icon>
@@ -56,66 +38,56 @@
                 </v-icon>
             </td>
         </template>
-        <template slot="no-data">
-            <v-btn color="primary" @click="initialize">Reset</v-btn>
-        </template>
     </v-data-table>
 </div>
 </template>
 
 <script>
+import {
+    db
+} from '../../config/firebase.js';
 export default {
     data: () => ({
         dialog: false,
         headers: [{
-                text: 'Dessert (100g serving)',
+                text: 'ФИО',
                 align: 'left',
-                sortable: false,
                 value: 'name'
             },
             {
-                text: 'Calories',
-                value: 'calories'
-            },
-            {
-                text: 'Fat (g)',
-                value: 'fat'
-            },
-            {
-                text: 'Carbs (g)',
-                value: 'carbs'
-            },
-            {
-                text: 'Protein (g)',
-                value: 'protein'
-            },
-            {
-                text: 'Actions',
+                text: 'Действие',
                 value: 'name',
                 sortable: false
             }
         ],
-        desserts: [],
         editedIndex: -1,
+        editedIndexForUpdate: "",
+        /* Объект записи -------------------------------------------------------------------*/
         editedItem: {
-            name: '',
-            calories: 0,
-            fat: 0,
-            carbs: 0,
-            protein: 0
+            name: ''
         },
         defaultItem: {
-            name: '',
-            calories: 0,
-            fat: 0,
-            carbs: 0,
-            protein: 0
-        }
+            name: ''
+        },
+        employee: {},
+        /* Конец объект записи -------------------------------------------------------------------*/
+        /*Валидация*/
+        dictionary: {
+            custom: {
+                name: {
+                    required: () => 'Поле не должно быть пустым',
+                    max: 'Поле не должно превышать 50 символов'
+                }
+            }
+        },
     }),
+    firebase: {
+        employee: db.ref('employee')
+    },
 
     computed: {
         formTitle() {
-            return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+            return this.editedIndex === -1 ? 'Новый сотрудник' : 'Редактировать сотрудника'
         }
     },
 
@@ -125,35 +97,21 @@ export default {
         }
     },
 
-    created() {
-        this.initialize()
-    },
-
     methods: {
-        initialize() {
-            this.desserts = [{
-                    name: 'Frozen Yogurt',
-                    calories: 159,
-                    fat: 6.0,
-                    carbs: 24,
-                    protein: 4.0
-                }
-            ]
-        },
-
         editItem(item) {
-            this.editedIndex = this.desserts.indexOf(item)
+            this.editedIndexForUpdate = item['.key'];
+            this.editedIndex = this.employee.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialog = true
         },
-
+        /* Удаление записи -------------------------------------------------------------------*/
         deleteItem(item) {
-            const index = this.desserts.indexOf(item)
-            confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
+            confirm('Удалить запись?') && this.$firebaseRefs.employee.child(item['.key']).remove()
         },
 
         close() {
             this.dialog = false
+            this.editedIndexForUpdate = ""
             setTimeout(() => {
                 this.editedItem = Object.assign({}, this.defaultItem)
                 this.editedIndex = -1
@@ -161,13 +119,33 @@ export default {
         },
 
         save() {
-            if (this.editedIndex > -1) {
-                Object.assign(this.desserts[this.editedIndex], this.editedItem)
-            } else {
-                this.desserts.push(this.editedItem)
-            }
-            this.close()
+            this.$validator.validate('name').then((result) => {
+                if (result) {
+                    if (this.editedIndex > -1) {
+                        const copy = this.editedItem;
+                        delete copy['.key'];
+                        console.log(this.editedItem["name"]);
+                        console.log(this.editedIndexForUpdate);
+                        this.$firebaseRefs.employee.child(this.editedIndexForUpdate).set(copy)
+
+                    } else {
+                        /* Добавление новой записи -------------------------------------------------------------------*/
+                        this.$firebaseRefs.employee.push(this.editedItem);
+                    }
+                    this.close()
+                } else {
+                    console.log("validation failed");
+                }
+            }).catch(() => {
+                alert(this.errors.all())
+            })
+
         }
+
+    },
+    mounted() {
+        /*Валидация*/
+        this.$validator.localize('ru', this.dictionary)
     }
 }
 </script>

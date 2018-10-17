@@ -50,7 +50,6 @@ export default {
                 name: {
                     required: () => 'Поле не должно быть пустым',
                     max: 'Поле не должно превышать 50 символов'
-                    // custom messages
                 }
             }
         },
@@ -62,6 +61,7 @@ export default {
         organization: db.ref('Organization')
     },
     mounted() {
+        /*Валидация*/
         this.$validator.localize('ru', this.dictionary)
     },
     methods: {
