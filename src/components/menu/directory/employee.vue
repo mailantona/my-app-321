@@ -3,7 +3,7 @@
     <v-toolbar flat color="grey lighten-5">
         <v-toolbar-title>Сотрудники</v-toolbar-title>
         <v-divider class="mx-2" inset vertical></v-divider>
-        <v-dialog v-model="dialog" max-width="500px">
+        <v-dialog v-model="dialog" max-width="500px" persistent>
             <v-btn slot="activator" color="blue" dark class="mb-2">Добавить</v-btn>
             <v-card>
                 <v-card-title>
@@ -20,7 +20,7 @@
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" flat @click.native="close">Отмена</v-btn>
+                    <v-btn color="blue darken-1" flat @click.native="close()">Отмена</v-btn>
                     <v-btn color="blue darken-1" flat @click.native="save">Сохранить</v-btn>
                 </v-card-actions>
             </v-card>
@@ -113,10 +113,15 @@ export default {
         close() {
             this.dialog = false
             this.editedIndexForUpdate = ""
+            
+            
             setTimeout(() => {
                 this.editedItem = Object.assign({}, this.defaultItem)
                 this.editedIndex = -1
+                this.$validator.reset()
+                console.log("$validator.reset");
             }, 300)
+            
         },
 
         save() {
@@ -134,8 +139,10 @@ export default {
                         this.$firebaseRefs.employee.push(this.editedItem);
                     }
                     this.close()
+                    
                 } else {
                     console.log("validation failed");
+                    
                 }
             }).catch(() => {
                 alert(this.errors.all())
