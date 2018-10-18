@@ -1,15 +1,6 @@
 <template>
 <div>
-    <v-navigation-drawer v-model="drawer" fixed app width="250">
-        <v-toolbar flat>
-            <v-list>
-                <v-list-tile>
-                    <v-list-tile-title class="title">
-                        Меню
-                    </v-list-tile-title>
-                </v-list-tile>
-            </v-list>
-        </v-toolbar>
+    <v-navigation-drawer v-model="drawer" fixed app width="250" :clipped="$vuetify.breakpoint.lgAndUp">
         <v-list>
 
             <v-list-tile to="/">
@@ -48,7 +39,7 @@
 
         </v-list>
     </v-navigation-drawer>
-    <v-toolbar color="blue" dark fixed app>
+    <v-toolbar :clipped-left="$vuetify.breakpoint.lgAndUp" color="blue" dark fixed app>
         <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         {{this.$store.getters.userLoginSett.email}}

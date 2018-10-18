@@ -4,7 +4,7 @@
         <v-toolbar-title>Сотрудники</v-toolbar-title>
         <v-divider class="mx-2" inset vertical></v-divider>
         <v-dialog v-model="dialog" max-width="500px">
-            <v-btn slot="activator" color="blue" dark class="mb-2">New Item</v-btn>
+            <v-btn slot="activator" color="blue" dark class="mb-2">Добавить</v-btn>
             <v-card>
                 <v-card-title>
                     <span class="headline">{{ formTitle }}</span>
@@ -20,13 +20,13 @@
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" flat @click.native="close">Cancel</v-btn>
-                    <v-btn color="blue darken-1" flat @click.native="save">Save</v-btn>
+                    <v-btn color="blue darken-1" flat @click.native="close">Отмена</v-btn>
+                    <v-btn color="blue darken-1" flat @click.native="save">Сохранить</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
     </v-toolbar>
-    <v-data-table :headers="headers" :items="employee" hide-actions class="elevation-1">
+    <v-data-table :headers="headers" :items="employee" hide-actions class="elevation-1" :loading="loading">
         <template slot="items" slot-scope="props">
             <td>{{ props.item.name }}</td>
             <td>
@@ -48,6 +48,7 @@ import {
 } from '../../config/firebase.js';
 export default {
     data: () => ({
+        loading: false,
         dialog: false,
         headers: [{
                 text: 'ФИО',
