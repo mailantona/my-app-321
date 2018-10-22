@@ -3,23 +3,40 @@
     <v-toolbar flat color="grey lighten-5">
         <v-toolbar-title>Задачи АРМ РРМ</v-toolbar-title>
         <v-divider class="mx-2" inset vertical></v-divider>
-        <v-dialog v-model="dialog" max-width="500px" persistent>
+        <v-dialog v-model="dialog" max-width="600px" persistent>
             <v-btn slot="activator" color="blue" dark class="mb-2">Добавить</v-btn>
             <v-card>
-                <v-card-title>
-                    <span class="headline">{{ formTitle }}</span>
+                <v-card-title class="blue">
+                    <span class="headline white--text">{{ formTitle }}</span>
                 </v-card-title>
+                <v-container grid-list-md>
+                    <v-card-text>
+                        <v-layout wrap row>
+                            <v-flex xs12>
+                                <v-text-field v-model="newTask.name" label="Заголовок" :counter="50" required v-validate="'required|max:50'" :error-messages="errors.collect('name')" data-vv-name="name"></v-text-field>
+                                <v-textarea auto-grow rows=1 v-model="newTask.description" label="Описание" required v-validate="'required'" :error-messages="errors.collect('description')" data-vv-name="description"></v-textarea>
 
-                <v-card-text>
-                    <v-layout wrap>
-                        <v-flex>
-                            <v-text-field v-model="newTask.name" label="Заголовок" :counter="50" required v-validate="'required|max:50'" :error-messages="errors.collect('name')" data-vv-name="name"></v-text-field>
-                            <v-textarea auto-grow rows=1 v-model="newTask.description" label="Описание" required v-validate="'required'" :error-messages="errors.collect('description')" data-vv-name="description"></v-textarea>
-                            <v-select :items="employee" item-text="name" :item-value="key" v-model="newTask.employeeSelKey" label="Сотрудник" required v-validate="'required'" :error-messages="errors.collect('employeeSelKey')" data-vv-name="employeeSelKey"></v-select>
-                        </v-flex>
-                    </v-layout>
-                </v-card-text>
+                                <v-select :items="employee" item-text="name" :item-value="key" v-model="newTask.employeeSelKey" label="Сотрудник" required v-validate="'required'" :error-messages="errors.collect('employeeSelKey')" data-vv-name="employeeSelKey"></v-select>
+                            </v-flex>
+                            <v-flex xs6>
+                                <v-select :items="scope" v-model="newTask.scope" label="Рамки выполнения" required v-validate="'required'" :error-messages="errors.collect('scope')" data-vv-name="scope"></v-select>
+                            </v-flex>
+                            <v-flex xs6>
+                                <v-select :items="matching" v-model="newTask.matching" label="Согласование" required v-validate="'required'" :error-messages="errors.collect('matching')" data-vv-name="matching"></v-select>
+                            </v-flex>
+                            <v-flex xs4>
+                                
+                            </v-flex>
+                            <v-flex xs4>
+                            </v-flex>
+                            <v-flex xs4>
+                            </v-flex>
+                            <v-flex xs4>
+                            </v-flex>
 
+                        </v-layout>
+                    </v-card-text>
+                </v-container>
                 <v-card-actions>
 
                     <v-spacer></v-spacer>
@@ -71,14 +88,14 @@
                         </v-list>
                         <!--  <v-divider></v-divider> -->
                         <v-card-actions>
-                            <v-btn @click="deleteItem(task)" icon color="cyan" flat>
-                                <v-icon>delete</v-icon>
-                            </v-btn>
+                            <v-btn color="cyan" flat>Детали</v-btn>
                             <v-spacer></v-spacer>
                             <v-btn @click="editItem(task)" icon color="cyan" flat>
                                 <v-icon>edit</v-icon>
                             </v-btn>
-                            <v-btn color="cyan" flat>Детали</v-btn>
+                            <v-btn @click="deleteItem(task)" icon color="cyan" flat>
+                                <v-icon>delete</v-icon>
+                            </v-btn>
 
                         </v-card-actions>
                     </v-card>
@@ -111,7 +128,6 @@ export default {
         /* Хрень для тени при наведении */
         reviews: 413,
         value: 4.5,
-
         /*Валидация*/
         dictionary: {
             custom: {
@@ -124,6 +140,12 @@ export default {
                 },
                 employeeSelKey: {
                     required: () => 'Поле не должно быть пустым',
+                },
+                scope: {
+                    required: () => 'Поле не должно быть пустым',
+                },
+                matching: {
+                    required: () => 'Поле не должно быть пустым',
                 }
             }
         },
@@ -135,8 +157,12 @@ export default {
         newTask: {
             name: null,
             description: null,
-            employeeSelKey: null
+            employeeSelKey: null,
+            scope: null,
+            matching: null
         },
+        scope: ['Сопровождение', 'Доп. сопровождение', 'Инвест. программа'],
+        matching: ['Согласовано в ПАО', 'Согласовано в ИНФОРМ', 'В процессе', 'Не требует'],
 
         editedIndex: 1,
         editedIndexForUpdate: null,
