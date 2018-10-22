@@ -7,7 +7,7 @@
             <v-btn slot="activator" color="blue" dark class="mb-2">Добавить</v-btn>
             <v-card>
                 <v-card-title>
-                    <span class="headline">Новая задача</span>
+                    <span class="headline">{{ formTitle }}</span>
                 </v-card-title>
 
                 <v-card-text>
@@ -15,37 +15,25 @@
                         <v-flex>
                             <v-text-field v-model="newTask.name" label="Заголовок" :counter="50" required v-validate="'required|max:50'" :error-messages="errors.collect('name')" data-vv-name="name"></v-text-field>
                             <v-textarea auto-grow rows=1 v-model="newTask.description" label="Описание" required v-validate="'required'" :error-messages="errors.collect('description')" data-vv-name="description"></v-textarea>
-
-                            <v-select :return-object="true" :items="employee" item-text="name" v-model="employeeSel" label="Сотрудник" required v-validate="'required'" :error-messages="errors.collect('employeeSel')" data-vv-name="employeeSel">
-                                <template slot="selection" slot-scope="data">
-                                    {{ data.item.name}}
-                                </template>
-                                <template slot="item" slot-scope="data">
-                                    {{ data.item.name}}
-                                </template>
-                            </v-select>
+                            <v-select :items="employee" item-text="name" :item-value="key" v-model="newTask.employeeSelKey" label="Сотрудник" required v-validate="'required'" :error-messages="errors.collect('employeeSelKey')" data-vv-name="employeeSelKey"></v-select>
                         </v-flex>
                     </v-layout>
                 </v-card-text>
- 
 
                 <v-card-actions>
+
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" flat @click.native="close()">Отмена</v-btn>
                     <v-btn color="blue darken-1" flat @click.native="save()">Сохранить</v-btn>
                 </v-card-actions>
-                {{newTask}}
-                {{employeeSel}}
+                newTask - {{newTask}}
             </v-card>
         </v-dialog>
     </v-toolbar>
 
-  <!--   <ul id="example-1">
-        <li v-for="item in employee">
-            {{ item.value }}
-        </li>
-    </ul> -->
-
+    {{newTask}}
+    {{editedIndexForUpdate}}
+    {{editedIndex}}
     <v-container grid-list-xl>
         <v-layout row wrap>
             <v-flex xs4>
@@ -59,16 +47,16 @@
             </v-flex>
             <!-- Задачи -->
             <v-flex xs4>
-                <v-hover>
+                <v-hover v-for="task in taskRRM" :key="task['.key']">
 
                     <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="mx-auto mb-3">
                         <v-card-title class="cyan">
-                            <span class="subheading white--text">Постоение карт различных параметров</span>
+                            <span class="subheading white--text">{{task.name}}</span>
                         </v-card-title>
                         <v-list three-line>
                             <v-list-tile>
                                 <v-list-tile-content>
-                                    <v-list-tile-sub-title>(650) 555-1234 ваываыва ываыва ыва ыва ыва ыв аыв ук впва пввыа аыв аыва ыв аыв аыва выа ыв аыва ыв авыа ыв аыва ап вап вап ва пва пвап ва пва па</v-list-tile-sub-title>
+                                    <v-list-tile-sub-title>{{task.description}}</v-list-tile-sub-title>
                                 </v-list-tile-content>
                                 <v-list-tile-avatar>
                                     <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg">
@@ -83,8 +71,11 @@
                         </v-list>
                         <!--  <v-divider></v-divider> -->
                         <v-card-actions>
+                            <v-btn @click="deleteItem(task)" icon color="cyan" flat>
+                                <v-icon>delete</v-icon>
+                            </v-btn>
                             <v-spacer></v-spacer>
-                            <v-btn icon color="cyan" flat>
+                            <v-btn @click="editItem(task)" icon color="cyan" flat>
                                 <v-icon>edit</v-icon>
                             </v-btn>
                             <v-btn color="cyan" flat>Детали</v-btn>
@@ -93,9 +84,6 @@
                     </v-card>
                 </v-hover>
 
-                <v-card dark color="primary">
-                    <v-card-text class="px-0">4</v-card-text>
-                </v-card>
             </v-flex>
             <v-flex xs4>
                 <v-card dark color="primary">
@@ -134,7 +122,7 @@ export default {
                 description: {
                     required: () => 'Поле не должно быть пустым',
                 },
-                employeeSel: {
+                employeeSelKey: {
                     required: () => 'Поле не должно быть пустым',
                 }
             }
@@ -143,34 +131,50 @@ export default {
         /* Нормальные переменные */
         dialog: false,
         employee: {},
-        employeeSel: {},
         taskRRM: {},
         newTask: {
             name: null,
             description: null,
             employeeSelKey: null
-        }
+        },
+
+        editedIndex: 1,
+        editedIndexForUpdate: null,
     }),
 
     methods: {
         close() {
-            this.dialog = false
-            this.$validator.reset()
+            this.dialog = false;
+            this.newTask = {};
+            this.$validator.reset();
+            this.editedIndex = 1;
+            this.editedIndexForUpdate = null
+        },
+        editItem(item) {
+
+            this.editedIndexForUpdate = item['.key'];
+            this.editedIndex = 2
+            this.newTask = Object.assign({}, item);
+            this.dialog = true;
+
+            console.log('TCL: editItem -> item', item);
         },
 
         save() {
 
-            /* this.newTask.employeeSelKey = employeeSel['.key']; */
-            console.log(this.employeeSel['.key']);
-            this.$firebaseRefs.taskRRM.push(this.newTask);
-
             this.$validator.validateAll().then((result) => {
                 if (result) {
 
-                    
+                    if (this.editedIndex === 1) {
+                        this.$firebaseRefs.taskRRM.push(this.newTask);
+                    } else {
+                        const copy = this.newTask;
+                        delete copy['.key'];
+                        this.$firebaseRefs.taskRRM.child(this.editedIndexForUpdate).set(copy)
+                        console.log(this.editedIndexForUpdate);
+                    }
 
                     this.close()
-
 
                 } else {
                     console.log("validation failed");
@@ -180,7 +184,11 @@ export default {
                 console.log('TCL: save -> errors', errors);
             })
 
-        }
+        },
+        deleteItem(item) {
+            confirm('Удалить запись?') && this.$firebaseRefs.taskRRM.child(item['.key']).remove()
+        },
+        key: item => item['.key']
     },
     firebase: {
         employee: db.ref('employee'),
@@ -189,12 +197,15 @@ export default {
     mounted() {
         /*Валидация*/
         this.$validator.localize('ru', this.dictionary)
+    },
+    computed: {
+        formTitle() {
+            return this.editedIndex === 1 ? 'Новая задача' : 'Редактировать задачу'
+        }
     }
 }
 </script>
 
 <style>
-.borderRight {
-    border-right: 1px solid gray !important;
-}
+
 </style>
