@@ -1,19 +1,22 @@
 <template>
-    <Employee></Employee>
+<div>
+    
+
+    <directoryList></directoryList>
+    
+</div>
 </template>
 
-
 <script>
-import Employee from './directory/employee.vue';
 
+import directoryList from './directory/directoryList.vue';
 
 export default {
     components: {
-        Employee
+        directoryList
     }
 }
 </script>
-
 
 <style>
 

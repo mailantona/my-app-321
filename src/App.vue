@@ -3,7 +3,7 @@
     <template v-if="this.$store.getters.isSignIn">
         <Navigation></Navigation>
         <Main></Main>
-        <Footer></Footer>
+        <!-- <Footer></Footer> -->
     </template>
     <template v-else>
         <SignIn></SignIn>

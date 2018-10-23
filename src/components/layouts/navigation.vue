@@ -27,7 +27,7 @@
                     <v-list-tile-title >firebase</v-list-tile-title>
                 </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile to="/directory">
+            <v-list-tile to="/directory/employee">
                 <v-list-tile-action>
                     <v-icon></v-icon>
                 </v-list-tile-action>
@@ -39,7 +39,7 @@
 
         </v-list>
     </v-navigation-drawer>
-    <v-toolbar :clipped-left="$vuetify.breakpoint.lgAndUp" color="blue" dark fixed app>
+    <v-toolbar :clipped-left="$vuetify.breakpoint.lgAndUp" color="blue" dark fixed app dense>
         <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
         {{this.$store.getters.userLoginSett.email}}
