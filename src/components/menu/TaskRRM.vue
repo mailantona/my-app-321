@@ -14,18 +14,24 @@
                         <v-layout wrap row>
                             <v-flex xs12>
                                 <v-text-field v-model="newTask.name" label="Заголовок" :counter="50" required v-validate="'required|max:50'" :error-messages="errors.collect('name')" data-vv-name="name"></v-text-field>
-                                <v-textarea auto-grow rows=1 v-model="newTask.description" label="Описание" required v-validate="'required'" :error-messages="errors.collect('description')" data-vv-name="description"></v-textarea>
-
-                                <v-select :items="employee" item-text="name" :item-value="key" v-model="newTask.employeeSelKey" label="Сотрудник" required v-validate="'required'" :error-messages="errors.collect('employeeSelKey')" data-vv-name="employeeSelKey"></v-select>
+                                <v-textarea auto-grow rows=2 v-model="newTask.description" label="Описание" required v-validate="'required'" :error-messages="errors.collect('description')" data-vv-name="description"></v-textarea>
                             </v-flex>
                             <v-flex xs6>
+                                <v-select :items="employee" item-text="name" :item-value="key" v-model="newTask.employeeSelKey" label="Исполнитель" required v-validate="'required'" :error-messages="errors.collect('employeeSelKey')" data-vv-name="employeeSelKey"></v-select>
                                 <v-select :items="scope" v-model="newTask.scope" label="Рамки выполнения" required v-validate="'required'" :error-messages="errors.collect('scope')" data-vv-name="scope"></v-select>
                             </v-flex>
                             <v-flex xs6>
+                                <v-select :items="['Блокирующий', 'Высокий' , 'Средний' , 'Низкий']" v-model="newTask.priority" label="Приоритет" required v-validate="'required'" :error-messages="errors.collect('priority')" data-vv-name="priority"></v-select>
                                 <v-select :items="matching" v-model="newTask.matching" label="Согласование" required v-validate="'required'" :error-messages="errors.collect('matching')" data-vv-name="matching"></v-select>
                             </v-flex>
-                            <v-flex xs4>
+
+                            <v-flex xs6>
                                 
+                            </v-flex>
+                            <v-flex xs6>
+                                
+                            </v-flex>
+                            <v-flex xs4>
                             </v-flex>
                             <v-flex xs4>
                             </v-flex>
@@ -143,8 +149,13 @@ export default {
                 },
                 scope: {
                     required: () => 'Поле не должно быть пустым',
-                },
+                }
+                ,
                 matching: {
+                    required: () => 'Поле не должно быть пустым',
+                }
+                ,
+                priority: {
                     required: () => 'Поле не должно быть пустым',
                 }
             }
@@ -159,7 +170,9 @@ export default {
             description: null,
             employeeSelKey: null,
             scope: null,
-            matching: null
+            matching: null,
+            whoIns: '',
+            priority: null
         },
         scope: ['Сопровождение', 'Доп. сопровождение', 'Инвест. программа'],
         matching: ['Согласовано в ПАО', 'Согласовано в ИНФОРМ', 'В процессе', 'Не требует'],
@@ -190,7 +203,7 @@ export default {
 
             this.$validator.validateAll().then((result) => {
                 if (result) {
-
+                     this.newTask.whoIns = this.$store.getters.userLoginSett.email;
                     if (this.editedIndex === 1) {
                         this.$firebaseRefs.taskRRM.push(this.newTask);
                     } else {

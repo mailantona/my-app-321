@@ -11,20 +11,12 @@
                     <v-list-tile-title >Главная</v-list-tile-title>
                 </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile to="/TaskRRM">
+            <v-list-tile to="/taskRRM">
                 <v-list-tile-action>
                     <v-icon></v-icon>
                 </v-list-tile-action>
                 <v-list-tile-content>
                     <v-list-tile-title >Задачи</v-list-tile-title>
-                </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile to="/firebase">
-                <v-list-tile-action>
-                    <v-icon></v-icon>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                    <v-list-tile-title >firebase</v-list-tile-title>
                 </v-list-tile-content>
             </v-list-tile>
             <v-list-tile to="/directory/employee">

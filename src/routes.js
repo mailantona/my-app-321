@@ -22,8 +22,8 @@ const routes = [
         component: Firebase
     },
     {
-        name: 'TaskRRM',
-        path: "/TaskRRM",
+        name: 'taskRRM',
+        path: "/taskRRM",
         component: TaskRRM
     },
     {

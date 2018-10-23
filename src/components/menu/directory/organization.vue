@@ -13,7 +13,7 @@
                 <v-card-text>
                     <v-layout wrap>
                         <v-flex>
-                            <v-text-field v-model="editedItem.name" label="ФИО" :counter="50" required v-validate="'required|max:50'" :error-messages="errors.collect('name')" data-vv-name="name"></v-text-field>
+                            <v-text-field v-model="editedItem.name" label="Организация" :counter="50" required v-validate="'required|max:50'" :error-messages="errors.collect('name')" data-vv-name="name"></v-text-field>
                         </v-flex>
                     </v-layout>
                 </v-card-text>
@@ -29,6 +29,7 @@
     <v-data-table :headers="headers" :items="organization" hide-actions class="elevation-1" :loading="loading">
         <template slot="items" slot-scope="props">
             <td>{{ props.item.name }}</td>
+            <td>{{ props.item.whoIns }}</td>
             <td>
                 <v-icon small class="mr-2" @click="editItem(props.item)">
                     edit
@@ -50,8 +51,14 @@ export default {
     data: () => ({
         loading: false,
         dialog: false,
-        headers: [{
-                text: 'ФИО',
+        headers: [
+            {
+                text: 'Организация',
+                align: 'left',
+                value: 'name'
+            },
+            {
+                text: 'Кто добавил',
                 align: 'left',
                 value: 'name'
             },
@@ -65,10 +72,12 @@ export default {
         editedIndexForUpdate: "",
         /* Объект записи -------------------------------------------------------------------*/
         editedItem: {
-            name: ''
+            name: '',
+            whoIns: ''
         },
         defaultItem: {
-            name: ''
+            name: '',
+            whoIns: ''
         },
         organization: {},
         /* Конец объект записи -------------------------------------------------------------------*/
@@ -88,7 +97,7 @@ export default {
 
     computed: {
         formTitle() {
-            return this.editedIndex === -1 ? 'Новый сотрудник' : 'Редактировать сотрудника'
+            return this.editedIndex === -1 ? 'Новая организация' : 'Редактировать оргенизацию'
         }
     },
 
@@ -127,6 +136,7 @@ export default {
         save() {
             this.$validator.validate('name').then((result) => {
                 if (result) {
+                    this.editedItem.whoIns = this.$store.getters.userLoginSett.email;
                     if (this.editedIndex > -1) {
                         const copy = this.editedItem;
                         delete copy['.key'];

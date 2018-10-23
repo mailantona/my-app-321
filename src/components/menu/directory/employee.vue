@@ -29,6 +29,7 @@
     <v-data-table :headers="headers" :items="employee" hide-actions class="elevation-1" :loading="loading">
         <template slot="items" slot-scope="props">
             <td>{{ props.item.name }}</td>
+            <td>{{ props.item.whoIns }}</td>
             <td>
                 <v-icon small class="mr-2" @click="editItem(props.item)">
                     edit
@@ -50,8 +51,14 @@ export default {
     data: () => ({
         loading: false,
         dialog: false,
-        headers: [{
+        headers: [
+            {
                 text: 'ФИО',
+                align: 'left',
+                value: 'name'
+            },
+            {
+                text: 'Кто добавил',
                 align: 'left',
                 value: 'name'
             },
@@ -65,10 +72,12 @@ export default {
         editedIndexForUpdate: "",
         /* Объект записи -------------------------------------------------------------------*/
         editedItem: {
-            name: ''
+            name: '',
+            whoIns: ''
         },
         defaultItem: {
-            name: ''
+            name: '',
+            whoIns: ''
         },
         employee: {},
         /* Конец объект записи -------------------------------------------------------------------*/
@@ -127,6 +136,7 @@ export default {
         save() {
             this.$validator.validate('name').then((result) => {
                 if (result) {
+                    this.editedItem.whoIns = this.$store.getters.userLoginSett.email;
                     if (this.editedIndex > -1) {
                         const copy = this.editedItem;
                         delete copy['.key'];

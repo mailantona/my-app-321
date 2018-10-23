@@ -1,12 +1,10 @@
 <template>
 <div>
     <directoryList></directoryList>
-    <div v-if="id === 'organization'">
-        <Organization></Organization>
-    </div>
-    <div v-if="id === 'employee'">
-        <Employee></Employee>
-    </div>
+
+    <Organization v-if="id === 'organization'"></Organization>
+
+    <Employee v-if="id === 'employee'"></Employee>
 
 </div>
 </template>
