@@ -3,21 +3,21 @@
     <v-toolbar flat color="grey lighten-5">
         <v-toolbar-title>Задачи АРМ РРМ</v-toolbar-title>
         <v-divider class="mx-2" inset vertical></v-divider>
-        <v-dialog v-model="dialog" persistent>
+        <v-dialog v-model="dialog" max-width="600px" persistent>
             <v-btn slot="activator" color="blue" dark class="mb-2">Добавить</v-btn>
             <v-card>
                 <v-card-title class="blue">
                     <span class="headline white--text">{{ formTitle }}</span>
                 </v-card-title>
 
-                <v-tabs>
-                    <v-tab key="1">
+                <v-tabs grow fixed-tabs>
+                    <v-tab>
                         Item
                     </v-tab>
-                    <v-tab key="2">
+                    <v-tab>
                         Item 2
                     </v-tab>
-                    <v-tab-item key="1">
+                    <v-tab-item >
                         <v-container pt-0 grid-list-md>
                             <v-card-text>
                                 <v-layout wrap row>
@@ -44,7 +44,7 @@
                             </v-card-text>
                         </v-container>
                     </v-tab-item>
-                    <v-tab-item key="2">
+                    <v-tab-item>
                         asasd
                     </v-tab-item>
                 </v-tabs>
