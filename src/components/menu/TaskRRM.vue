@@ -21,15 +21,15 @@
                                 <v-select :items="scope" v-model="newTask.scope" label="Рамки выполнения" required v-validate="'required'" :error-messages="errors.collect('scope')" data-vv-name="scope"></v-select>
                             </v-flex>
                             <v-flex xs6>
-                                <v-select :items="['Блокирующий', 'Высокий' , 'Средний' , 'Низкий']" v-model="newTask.priority" label="Приоритет" required v-validate="'required'" :error-messages="errors.collect('priority')" data-vv-name="priority"></v-select>
+                                <v-select :items="priorityObj" item-text="title" item-value="orderBy" v-model="newTask.priority" label="Приоритет" required v-validate="'required'" :error-messages="errors.collect('priority')" data-vv-name="priority"></v-select>
                                 <v-select :items="matching" v-model="newTask.matching" label="Согласование" required v-validate="'required'" :error-messages="errors.collect('matching')" data-vv-name="matching"></v-select>
                             </v-flex>
 
                             <v-flex xs6>
-                                
+
                             </v-flex>
                             <v-flex xs6>
-                                
+
                             </v-flex>
                             <v-flex xs4>
                             </v-flex>
@@ -73,7 +73,7 @@
                 <v-hover v-for="task in taskRRM" :key="task['.key']">
 
                     <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="mx-auto mb-3">
-                        <v-card-title class="cyan">
+                        <v-card-title :class="priorityObj.find(x => x.orderBy === task.priority).color.toString()">
                             <span class="subheading white--text">{{task.name}}</span>
                         </v-card-title>
                         <v-list three-line>
@@ -94,12 +94,12 @@
                         </v-list>
                         <!--  <v-divider></v-divider> -->
                         <v-card-actions>
-                            <v-btn color="cyan" flat>Детали</v-btn>
+                            <v-btn :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>Детали</v-btn>
                             <v-spacer></v-spacer>
-                            <v-btn @click="editItem(task)" icon color="cyan" flat>
+                            <v-btn @click="editItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
                                 <v-icon>edit</v-icon>
                             </v-btn>
-                            <v-btn @click="deleteItem(task)" icon color="cyan" flat>
+                            <v-btn @click="deleteItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
                                 <v-icon>delete</v-icon>
                             </v-btn>
 
@@ -149,12 +149,10 @@ export default {
                 },
                 scope: {
                     required: () => 'Поле не должно быть пустым',
-                }
-                ,
+                },
                 matching: {
                     required: () => 'Поле не должно быть пустым',
-                }
-                ,
+                },
                 priority: {
                     required: () => 'Поле не должно быть пустым',
                 }
@@ -172,10 +170,32 @@ export default {
             scope: null,
             matching: null,
             whoIns: '',
-            priority: null
+            priority: ''
         },
         scope: ['Сопровождение', 'Доп. сопровождение', 'Инвест. программа'],
         matching: ['Согласовано в ПАО', 'Согласовано в ИНФОРМ', 'В процессе', 'Не требует'],
+        asdads: ['', '', '', ''],
+        priorityObj: [{
+                orderBy: '4',
+                title: 'Низкий',
+                color: 'lime'
+            },
+            {
+                orderBy: '3',
+                title: 'Средний',
+                color: 'light-green'
+            },
+            {
+                orderBy: '2',
+                title: 'Высокий',
+                color: 'red'
+            },
+            {
+                orderBy: '1',
+                title: 'Блокирующий',
+                color: 'purple'
+            },
+        ],
 
         editedIndex: 1,
         editedIndexForUpdate: null,
@@ -203,7 +223,7 @@ export default {
 
             this.$validator.validateAll().then((result) => {
                 if (result) {
-                     this.newTask.whoIns = this.$store.getters.userLoginSett.email;
+                    this.newTask.whoIns = this.$store.getters.userLoginSett.email;
                     if (this.editedIndex === 1) {
                         this.$firebaseRefs.taskRRM.push(this.newTask);
                     } else {

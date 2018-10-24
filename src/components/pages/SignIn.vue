@@ -5,7 +5,7 @@
             <v-flex xs12 sm8 md4>
                 <v-card max-width="500" class="elevation-12">
                     <v-toolbar dark color="primary">
-                        <v-toolbar-title>Login form</v-toolbar-title>
+                        <v-toolbar-title>Вход</v-toolbar-title>
                         <v-spacer></v-spacer>
                     </v-toolbar>
                     <v-card-text>
