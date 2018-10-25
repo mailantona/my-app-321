@@ -46,7 +46,12 @@ export default {
             matching: null,
             whoIns: '',
             priority: '',
-            state: '1'
+            state: '1',
+            requestSD: '',
+            organizationSelKey: '',
+            initiator: '',
+            requestJiraURL: '',
+
         },
         scope: ['Сопровождение', 'Доп. сопровождение', 'Инвест. программа'],
         matching: ['Согласовано в ПАО', 'Согласовано в ИНФОРМ', 'В процессе', 'Не требует'],
@@ -126,6 +131,7 @@ export default {
             confirm('Удалить запись?') && this.$firebaseRefs.taskRRM.child(item['.key']).remove()
         },
         key: item => item['.key'],
+        /* Сортировка */
         even: function(arr) {
             // Set slice() to avoid to generate an infinite loop!
             return arr.slice().sort(function(a, b) {
@@ -135,7 +141,8 @@ export default {
     },
     firebase: {
         employee: db.ref('employee'),
-        taskRRM: db.ref('taskRRM')
+        taskRRM: db.ref('taskRRM'),
+        organization: db.ref('organization')
     },
     mounted() {
         /*Валидация*/
