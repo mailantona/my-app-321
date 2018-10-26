@@ -51,6 +51,7 @@ export default {
             organizationSelKey: '',
             initiator: '',
             requestJiraURL: '',
+    
 
         },
         scope: ['Сопровождение', 'Доп. сопровождение', 'Инвест. программа'],
