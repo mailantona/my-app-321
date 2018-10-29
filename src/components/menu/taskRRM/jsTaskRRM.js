@@ -152,6 +152,10 @@ export default {
     },
     firebase: {
         employee: db.ref('employee'),
+        employeeObj: {
+            source: db.ref('employee'),
+            asObject: true
+        } ,
         taskRRM: db.ref('taskRRM'),
         organization: db.ref('organization')
     },

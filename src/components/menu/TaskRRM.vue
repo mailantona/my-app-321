@@ -49,7 +49,7 @@
                                 </v-btn>
 
                                 <v-layout row v-for="(item, key) in newTask.requestJiraURL" :key="key">
-                                    
+
                                     <v-flex xs12>
                                         <v-text-field prepend-icon="link" v-model="item.url" label="Ссылка на заявку"></v-text-field>
                                     </v-flex>
@@ -72,7 +72,7 @@
                     <v-btn color="blue darken-1" flat @click.native="save()">Сохранить</v-btn>
 
                 </v-card-actions>
-                {{ newTask.requestJiraURL }}
+                {{ newTask }}
             </v-card>
 
         </v-dialog>
@@ -102,8 +102,9 @@
                                         <v-list-tile-sub-title>{{task.description}} {{task.state}}</v-list-tile-sub-title>
                                     </v-list-tile-content>
                                     <v-list-tile-avatar>
-                                        <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg">
-                                </v-list-tile-avatar>
+                                        <img v-for="epm in employee" :key="epm['.key']" v-if="epm['.key'] === task.employeeSelKey" :src="epm.avatarURL">
+                                         <!-- {{employee.find(x => x['.key'] === task.employeeSelKey).avatarURL.toString()}} -->
+                                    </v-list-tile-avatar>
                                 </v-list-tile>
                             </v-list>
                             <v-card-actions>
@@ -134,8 +135,9 @@
                                         <v-list-tile-sub-title>{{task.description}} {{task.state}}</v-list-tile-sub-title>
                                     </v-list-tile-content>
                                     <v-list-tile-avatar>
-                                        <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg">
-                                </v-list-tile-avatar>
+                                        <img v-for="epm in employee" :key="epm['.key']" v-if="epm['.key'] === task.employeeSelKey" :src="epm.avatarURL">
+                                         <!-- {{employee.find(x => x['.key'] === task.employeeSelKey).avatarURL.toString()}} -->
+                                    </v-list-tile-avatar>
                                 </v-list-tile>
                             </v-list>
                             <v-card-actions>
@@ -156,7 +158,7 @@
             <v-flex xs4>
                 <div v-for="task in even(taskRRM)" :key="task['.key']">
                     <v-hover v-if="task.state === '3'">
-                        <v-card  slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="mx-auto mb-3">
+                        <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="mx-auto mb-3">
                             <v-card-title :class="priorityObj.find(x => x.orderBy === task.priority).color.toString()">
                                 <span class="subheading white--text">{{task.name}}</span>
                             </v-card-title>
@@ -166,8 +168,9 @@
                                         <v-list-tile-sub-title>{{task.description}} {{task.state}}</v-list-tile-sub-title>
                                     </v-list-tile-content>
                                     <v-list-tile-avatar>
-                                        <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg">
-                                </v-list-tile-avatar>
+                                        <img v-for="epm in employee" :key="epm['.key']" v-if="epm['.key'] === task.employeeSelKey" :src="epm.avatarURL">
+                                         <!-- {{employee.find(x => x['.key'] === task.employeeSelKey).avatarURL.toString()}} -->
+                                    </v-list-tile-avatar>
                                 </v-list-tile>
                             </v-list>
                             <v-card-actions>

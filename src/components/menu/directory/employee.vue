@@ -14,6 +14,7 @@
                     <v-layout wrap>
                         <v-flex>
                             <v-text-field v-model="editedItem.name" label="ФИО" :counter="50" required v-validate="'required|max:50'" :error-messages="errors.collect('name')" data-vv-name="name"></v-text-field>
+                            <v-text-field v-model="editedItem.avatarURL" label="Аватар URL" required v-validate="'required'" :error-messages="errors.collect('avatarURL')" data-vv-name="avatarURL"></v-text-field>
                         </v-flex>
                     </v-layout>
                 </v-card-text>
@@ -28,6 +29,9 @@
     </v-toolbar>
     <v-data-table :headers="headers" :items="employee" hide-actions class="elevation-1" :loading="loading">
         <template slot="items" slot-scope="props">
+            <td>
+                <v-avatar size="34"><img :src="props.item.avatarURL"></v-avatar>
+            </td>
             <td>{{ props.item.name }}</td>
             <td>{{ props.item.whoIns }}</td>
             <td>
@@ -51,8 +55,13 @@ export default {
     data: () => ({
         loading: false,
         dialog: false,
-        headers: [
+        headers: [{
+                text: 'Аватар',
+                align: 'left',
+                value: 'avatarURL'
+            },
             {
+
                 text: 'ФИО',
                 align: 'left',
                 value: 'name'
@@ -73,11 +82,13 @@ export default {
         /* Объект записи -------------------------------------------------------------------*/
         editedItem: {
             name: '',
-            whoIns: ''
+            whoIns: '',
+            avatarURL: 'https://cdn.vuetifyjs.com/images/lists/1.jpg'
         },
         defaultItem: {
             name: '',
-            whoIns: ''
+            whoIns: '',
+            avatarURL: 'https://cdn.vuetifyjs.com/images/lists/1.jpg'
         },
         employee: {},
         /* Конец объект записи -------------------------------------------------------------------*/
@@ -87,6 +98,9 @@ export default {
                 name: {
                     required: () => 'Поле не должно быть пустым',
                     max: 'Поле не должно превышать 50 символов'
+                },
+                avatarURL: {
+                    required: () => 'Поле не должно быть пустым'
                 }
             }
         },
@@ -122,15 +136,14 @@ export default {
         close() {
             this.dialog = false
             this.editedIndexForUpdate = ""
-            
-            
+
             setTimeout(() => {
                 this.editedItem = Object.assign({}, this.defaultItem)
                 this.editedIndex = -1
                 this.$validator.reset()
                 console.log("$validator.reset");
             }, 300)
-            
+
         },
 
         save() {
@@ -149,10 +162,10 @@ export default {
                         this.$firebaseRefs.employee.push(this.editedItem);
                     }
                     this.close()
-                    
+
                 } else {
                     console.log("validation failed");
-                    
+
                 }
             }).catch(() => {
                 alert(this.errors.all())
