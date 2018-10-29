@@ -43,7 +43,23 @@
                             </v-flex>
                             <v-flex xs12>
                                 <span class="headline">Jira</span>
-                                <v-text-field prepend-icon="link" v-model="newTask.requestJiraURL" label="Ссылка на заявку"></v-text-field>
+                                <!-- <v-text-field prepend-icon="link" v-model="newTask.requestJiraURL" label="Ссылка на заявку"></v-text-field> -->
+                                <v-btn @click="addJira()" icon color="blue" flat>
+                                    <v-icon>add_circle_outline</v-icon>
+                                </v-btn>
+
+                                <v-layout row v-for="(item, key) in newTask.requestJiraURL" :key="key">
+                                    
+                                    <v-flex xs12>
+                                        <v-text-field prepend-icon="link" v-model="item.url" label="Ссылка на заявку"></v-text-field>
+                                    </v-flex>
+                                    <v-flex p>
+                                        <v-btn @click="deleteJira(key)" icon color="blue" flat>
+                                            <v-icon>remove_circle_outline</v-icon>
+                                        </v-btn>
+                                    </v-flex>
+                                </v-layout>
+
                             </v-flex>
                         </v-layout>
                     </v-container>
@@ -54,7 +70,9 @@
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" flat @click.native="close()">Отмена</v-btn>
                     <v-btn color="blue darken-1" flat @click.native="save()">Сохранить</v-btn>
+
                 </v-card-actions>
+                {{ newTask.requestJiraURL }}
             </v-card>
 
         </v-dialog>
@@ -62,13 +80,13 @@
     <v-container grid-list-xl>
         <v-layout row wrap>
             <v-flex class="text-xs-center" xs4>
-                <span class="display-1">Новые</span>
+                <span class="headline">Новые</span>
             </v-flex>
             <v-flex class="text-xs-center" xs4>
-                <span class="display-1">В работе</span>
+                <span class="headline">В работе</span>
             </v-flex>
             <v-flex class="text-xs-center" xs4>
-                <span class="display-1">Готово</span>
+                <span class="headline">Готово</span>
             </v-flex>
             <!-- Задачи -->
             <v-flex xs4>
@@ -138,7 +156,7 @@
             <v-flex xs4>
                 <div v-for="task in even(taskRRM)" :key="task['.key']">
                     <v-hover v-if="task.state === '3'">
-                        <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="mx-auto mb-3">
+                        <v-card  slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="mx-auto mb-3">
                             <v-card-title :class="priorityObj.find(x => x.orderBy === task.priority).color.toString()">
                                 <span class="subheading white--text">{{task.name}}</span>
                             </v-card-title>

@@ -50,33 +50,34 @@ export default {
             requestSD: '',
             organizationSelKey: '',
             initiator: '',
-            requestJiraURL: '',
-    
+            requestJiraURL: [
+                { url: '' }
+            ],
+
 
         },
         scope: ['Сопровождение', 'Доп. сопровождение', 'Инвест. программа'],
         matching: ['Согласовано в ПАО', 'Согласовано в ИНФОРМ', 'В процессе', 'Не требует'],
-        asdads: ['', '', '', ''],
         priorityObj: [{
-                orderBy: '4',
-                title: 'Низкий',
-                color: 'lime'
-            },
-            {
-                orderBy: '3',
-                title: 'Средний',
-                color: 'light-green'
-            },
-            {
-                orderBy: '2',
-                title: 'Высокий',
-                color: 'purple'
-            },
-            {
-                orderBy: '1',
-                title: 'Блокирующий',
-                color: 'red'
-            },
+            orderBy: '4',
+            title: 'Низкий',
+            color: 'lime'
+        },
+        {
+            orderBy: '3',
+            title: 'Средний',
+            color: 'light-green'
+        },
+        {
+            orderBy: '2',
+            title: 'Высокий',
+            color: 'purple'
+        },
+        {
+            orderBy: '1',
+            title: 'Блокирующий',
+            color: 'red'
+        },
         ],
 
         editedIndex: 1,
@@ -87,7 +88,10 @@ export default {
         close() {
             this.dialog = false;
             this.newTask = {
-                state: '1'
+                state: '1',
+                requestJiraURL: [
+                    { url: '' }
+                ]
             };
             this.$validator.reset();
             this.editedIndex = 1;
@@ -133,12 +137,18 @@ export default {
         },
         key: item => item['.key'],
         /* Сортировка */
-        even: function(arr) {
+        even: function (arr) {
             // Set slice() to avoid to generate an infinite loop!
-            return arr.slice().sort(function(a, b) {
-              return a.priority - b.priority;
+            return arr.slice().sort(function (a, b) {
+                return a.priority - b.priority;
             });
-          }
+        },
+        addJira: function () {
+            this.newTask.requestJiraURL.push({ url: '' });
+        },
+        deleteJira: function (key) {
+            this.newTask.requestJiraURL.splice(key, 1);
+        }
     },
     firebase: {
         employee: db.ref('employee'),
