@@ -96,14 +96,14 @@
                             <v-card-title :class="priorityObj.find(x => x.orderBy === task.priority).color.toString()">
                                 <span class="subheading white--text">{{task.name}}</span>
                             </v-card-title>
-                            <v-list three-line>
+                            <v-list two-line>
                                 <v-list-tile>
                                     <v-list-tile-content>
                                         <v-list-tile-sub-title>{{task.description}} {{task.state}}</v-list-tile-sub-title>
                                     </v-list-tile-content>
                                     <v-list-tile-avatar>
                                         <img v-for="epm in employee" :key="epm['.key']" v-if="epm['.key'] === task.employeeSelKey" :src="epm.avatarURL">
-                                         <!-- {{employee.find(x => x['.key'] === task.employeeSelKey).avatarURL.toString()}} -->
+                                        <!-- {{employee.find(x => x['.key'] === task.employeeSelKey).avatarURL.toString()}} -->
                                     </v-list-tile-avatar>
                                 </v-list-tile>
                             </v-list>
@@ -129,14 +129,14 @@
                             <v-card-title :class="priorityObj.find(x => x.orderBy === task.priority).color.toString()">
                                 <span class="subheading white--text">{{task.name}}</span>
                             </v-card-title>
-                            <v-list three-line>
+                            <v-list two-line>
                                 <v-list-tile>
                                     <v-list-tile-content>
                                         <v-list-tile-sub-title>{{task.description}} {{task.state}}</v-list-tile-sub-title>
                                     </v-list-tile-content>
                                     <v-list-tile-avatar>
                                         <img v-for="epm in employee" :key="epm['.key']" v-if="epm['.key'] === task.employeeSelKey" :src="epm.avatarURL">
-                                         <!-- {{employee.find(x => x['.key'] === task.employeeSelKey).avatarURL.toString()}} -->
+                                        <!-- {{employee.find(x => x['.key'] === task.employeeSelKey).avatarURL.toString()}} -->
                                     </v-list-tile-avatar>
                                 </v-list-tile>
                             </v-list>
@@ -156,36 +156,40 @@
 
             </v-flex>
             <v-flex xs4>
-                <div v-for="task in even(taskRRM)" :key="task['.key']">
-                    <v-hover v-if="task.state === '3'">
-                        <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="mx-auto mb-3">
-                            <v-card-title :class="priorityObj.find(x => x.orderBy === task.priority).color.toString()">
-                                <span class="subheading white--text">{{task.name}}</span>
-                            </v-card-title>
-                            <v-list three-line>
-                                <v-list-tile>
-                                    <v-list-tile-content>
-                                        <v-list-tile-sub-title>{{task.description}} {{task.state}}</v-list-tile-sub-title>
-                                    </v-list-tile-content>
-                                    <v-list-tile-avatar>
-                                        <img v-for="epm in employee" :key="epm['.key']" v-if="epm['.key'] === task.employeeSelKey" :src="epm.avatarURL">
-                                         <!-- {{employee.find(x => x['.key'] === task.employeeSelKey).avatarURL.toString()}} -->
-                                    </v-list-tile-avatar>
-                                </v-list-tile>
-                            </v-list>
-                            <v-card-actions>
-                                <v-btn :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>Детали</v-btn>
-                                <v-spacer></v-spacer>
-                                <v-btn @click="editItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
-                                    <v-icon>edit</v-icon>
-                                </v-btn>
-                                <v-btn @click="deleteItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
-                                    <v-icon>delete</v-icon>
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-hover>
-                </div>
+                <v-container fluid grid-list-xl>
+                    <v-layout row wrap>
+                        <v-flex d-flex xs12 sm6 md3 v-for="task in even(taskRRM)" :key="task['.key']">
+                            <v-hover v-if="task.state === '3'">
+                                <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="mx-auto mb-3">
+                                    <v-card-title :class="priorityObj.find(x => x.orderBy === task.priority).color.toString()">
+                                        <span class="subheading white--text">{{task.name}}</span>
+                                    </v-card-title>
+                                    <v-list two-line>
+                                        <v-list-tile>
+                                            <v-list-tile-content>
+                                                <v-list-tile-sub-title>{{task.description}} {{task.state}}</v-list-tile-sub-title>
+                                            </v-list-tile-content>
+                                            <v-list-tile-avatar>
+                                                <img v-for="epm in employee" :key="epm['.key']" v-if="epm['.key'] === task.employeeSelKey" :src="epm.avatarURL">
+                                                <!-- {{employee.find(x => x['.key'] === task.employeeSelKey).avatarURL.toString()}} -->
+                                            </v-list-tile-avatar>
+                                        </v-list-tile>
+                                    </v-list>
+                                    <v-card-actions>
+                                        <v-btn :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>Детали</v-btn>
+                                        <v-spacer></v-spacer>
+                                        <v-btn @click="editItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
+                                            <v-icon>edit</v-icon>
+                                        </v-btn>
+                                        <v-btn @click="deleteItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
+                                            <v-icon>delete</v-icon>
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-hover>
+                        </v-flex>
+                    </v-layout>
+                </v-container>
             </v-flex>
 
         </v-layout>
