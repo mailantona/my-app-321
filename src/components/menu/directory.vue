@@ -1,23 +1,31 @@
 <template>
 <div>
-    
+    <div>
+        <v-btn-toggle>
+            <v-btn to="/directory/employee">Сотрудники</v-btn>
+            <v-btn to="/directory/organization">Организации</v-btn>
+        </v-btn-toggle>
+        <br><br>
+    </div>
+        <Organization v-if="id === 'organization'"></Organization>
+        <Employee v-if="id === 'employee'"></Employee>
 
-    <directoryList></directoryList>
-    
-</div>
+    </div>
 </template>
 
 <script>
-
-import directoryList from './directory/directoryList.vue';
+import Employee from './directory/employee.vue';
+import Organization from './directory/organization.vue';
 
 export default {
+    computed: {
+        id() {
+            return this.$route.params.id;
+        }
+    },
     components: {
-        directoryList
+        Employee,
+        Organization
     }
 }
 </script>
-
-<style>
-
-</style>

@@ -8,7 +8,7 @@ import TaskRRM from "./components/menu/TaskRRM.vue";
 import directory from "./components/menu/directory.vue";
 import Firebase from "./components/menu/firebase.vue";
 import E404 from "./components/pages/E404.vue";
-import Directories from "./components/menu/directory/directories.vue";
+/* import Directories from "./components/menu/directory/directories.vue"; */
 
 const routes = [
     {
@@ -28,18 +28,18 @@ const routes = [
     },
     {
         name: 'directory',
-        path: "/directory",
+        path: "/directory/:id",
         component: directory
     },
     {
-      path: "*",
-      component: E404
+        path: "*",
+        component: E404
     },
-    {
+    /* {
         name: 'directories',
         path: "/directory/:id",
         component: Directories
-      },
+      }, */
 ];
 
 export const router = new VueRouter({
