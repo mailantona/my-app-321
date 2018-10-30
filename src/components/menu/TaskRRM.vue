@@ -72,7 +72,6 @@
                     <v-btn color="blue darken-1" flat @click.native="save()">Сохранить</v-btn>
 
                 </v-card-actions>
-                {{ newTask }}
             </v-card>
 
         </v-dialog>
@@ -276,7 +275,10 @@ export default {
         },
         deleteJira: function (key) {
             this.newTask.requestJiraURL.splice(key, 1);
-        }
+        },
+        /* addBook: function () {
+            this.$bindAsObject('customers', db.ref('books').limitToFirst(this.num))
+        } */
     },
     firebase: {
         employee: db.ref('employee'),

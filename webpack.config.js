@@ -4,10 +4,15 @@ var webpack = require('webpack')
 module.exports = {
   entry: './src/main.js',
   output: {
-    path: path.resolve(__dirname, './firebaseHosting/toFireHost/dist'),
+    path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
     filename: 'build.js'
   },
+  /* output: {
+    path: path.resolve(__dirname, './firebaseHosting/toFireHost/dist'),
+    publicPath: '/firebaseHosting/toFireHost/dist/',
+    filename: 'build.js'
+  }, */
   resolve: {
     extensions: ['.js', '.vue'],
     alias: {
