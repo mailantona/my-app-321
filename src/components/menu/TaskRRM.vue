@@ -79,125 +79,225 @@
     </v-toolbar>
     <v-container grid-list-xl>
         <v-layout row wrap>
-            <v-flex class="text-xs-center" xs4>
-                <span class="headline">Новые</span>
-            </v-flex>
-            <v-flex class="text-xs-center" xs4>
-                <span class="headline">В работе</span>
-            </v-flex>
-            <v-flex class="text-xs-center" xs4>
-                <span class="headline">Готово</span>
-            </v-flex>
             <!-- Задачи -->
-            <v-flex xs4>
-                <div v-for="task in even(taskRRM)" :key="task['.key']">
-                    <v-hover v-if="task.state === '1'">
-                        <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="mx-auto mb-3">
-                            <v-card-title :class="priorityObj.find(x => x.orderBy === task.priority).color.toString()">
-                                <span class="subheading white--text">{{task.name}}</span>
-                            </v-card-title>
-                            <v-list two-line>
-                                <v-list-tile>
-                                    <v-list-tile-content>
-                                        <v-list-tile-sub-title>{{task.description}} {{task.state}}</v-list-tile-sub-title>
-                                    </v-list-tile-content>
-                                    <v-list-tile-avatar>
-                                        <img v-for="epm in employee" :key="epm['.key']" v-if="epm['.key'] === task.employeeSelKey" :src="epm.avatarURL">
-                                        <!-- {{employee.find(x => x['.key'] === task.employeeSelKey).avatarURL.toString()}} -->
-                                    </v-list-tile-avatar>
-                                </v-list-tile>
-                            </v-list>
-                            <v-card-actions>
-                                <v-btn :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>Детали</v-btn>
-                                <v-spacer></v-spacer>
-                                <v-btn @click="editItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
-                                    <v-icon>edit</v-icon>
-                                </v-btn>
-                                <v-btn @click="deleteItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
-                                    <v-icon>delete</v-icon>
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-hover>
-                </div>
+            <v-flex v-for="(n, index) in 3" :key="index" xs12 sm4>
+                <span class="headline" v-if="n === 1">Новые</span>
+                <span class="headline" v-if="n === 2">В работе</span>
+                <span class="headline" v-if="n === 3">Готово</span>
+                <v-divider class="mb-2"></v-divider>
+                <v-layout row wrap>
+                    <v-flex xs12 sm12 md12 lg12 xl6 v-for="task in even(taskRRM)" :key="task['.key']" v-if="task.state === n.toString()">
+                        <v-hover>
+                            <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`">
+                                <v-card-title :class="priorityObj.find(x => x.orderBy === task.priority).color.toString()">
+                                    <span class="subheading white--text">{{task.name}}</span>
 
+                                </v-card-title>
+                                <v-list two-line>
+                                    <v-list-tile>
+                                        <v-list-tile-content>
+                                            <v-list-tile-sub-title>{{task.description}} {{task.state}}</v-list-tile-sub-title>
+                                        </v-list-tile-content>
+                                        <v-list-tile-avatar>
+                                            <img v-for="epm in employee" :key="epm['.key']" v-if="epm['.key'] === task.employeeSelKey" :src="epm.avatarURL">
+                                            <!-- {{employee.find(x => x['.key'] === task.employeeSelKey).avatarURL.toString()}} -->
+                                        </v-list-tile-avatar>
+                                    </v-list-tile>
+                                </v-list>
+                                <v-card-actions>
+                                    <v-btn :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>Детали</v-btn>
+                                    <v-spacer></v-spacer>
+                                    <v-btn @click="editItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
+                                        <v-icon>edit</v-icon>
+                                    </v-btn>
+                                    <v-btn @click="deleteItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
+                                        <v-icon>delete</v-icon>
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-hover>
+                    </v-flex>
+                </v-layout>
             </v-flex>
-            <v-flex xs4>
-                <div v-for="task in even(taskRRM)" :key="task['.key']">
-                    <v-hover v-if="task.state === '2'">
-                        <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="mx-auto mb-3">
-                            <v-card-title :class="priorityObj.find(x => x.orderBy === task.priority).color.toString()">
-                                <span class="subheading white--text">{{task.name}}</span>
-                            </v-card-title>
-                            <v-list two-line>
-                                <v-list-tile>
-                                    <v-list-tile-content>
-                                        <v-list-tile-sub-title>{{task.description}} {{task.state}}</v-list-tile-sub-title>
-                                    </v-list-tile-content>
-                                    <v-list-tile-avatar>
-                                        <img v-for="epm in employee" :key="epm['.key']" v-if="epm['.key'] === task.employeeSelKey" :src="epm.avatarURL">
-                                        <!-- {{employee.find(x => x['.key'] === task.employeeSelKey).avatarURL.toString()}} -->
-                                    </v-list-tile-avatar>
-                                </v-list-tile>
-                            </v-list>
-                            <v-card-actions>
-                                <v-btn :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>Детали</v-btn>
-                                <v-spacer></v-spacer>
-                                <v-btn @click="editItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
-                                    <v-icon>edit</v-icon>
-                                </v-btn>
-                                <v-btn @click="deleteItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
-                                    <v-icon>delete</v-icon>
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-hover>
-                </div>
-
-            </v-flex>
-            <v-flex xs4>
-                <v-container fluid grid-list-xl>
-                    <v-layout row wrap>
-                        <v-flex d-flex xs12 sm6 md3 v-for="task in even(taskRRM)" :key="task['.key']">
-                            <v-hover v-if="task.state === '3'">
-                                <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="mx-auto mb-3">
-                                    <v-card-title :class="priorityObj.find(x => x.orderBy === task.priority).color.toString()">
-                                        <span class="subheading white--text">{{task.name}}</span>
-                                    </v-card-title>
-                                    <v-list two-line>
-                                        <v-list-tile>
-                                            <v-list-tile-content>
-                                                <v-list-tile-sub-title>{{task.description}} {{task.state}}</v-list-tile-sub-title>
-                                            </v-list-tile-content>
-                                            <v-list-tile-avatar>
-                                                <img v-for="epm in employee" :key="epm['.key']" v-if="epm['.key'] === task.employeeSelKey" :src="epm.avatarURL">
-                                                <!-- {{employee.find(x => x['.key'] === task.employeeSelKey).avatarURL.toString()}} -->
-                                            </v-list-tile-avatar>
-                                        </v-list-tile>
-                                    </v-list>
-                                    <v-card-actions>
-                                        <v-btn :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>Детали</v-btn>
-                                        <v-spacer></v-spacer>
-                                        <v-btn @click="editItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
-                                            <v-icon>edit</v-icon>
-                                        </v-btn>
-                                        <v-btn @click="deleteItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
-                                            <v-icon>delete</v-icon>
-                                        </v-btn>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-hover>
-                        </v-flex>
-                    </v-layout>
-                </v-container>
-            </v-flex>
-
         </v-layout>
     </v-container>
 </div>
 </template>
 
-<script src="./taskRRM/jsTaskRRM.js"></script>
+<script>
+import {
+    db
+} from '../config/firebase.js';
+export default {
+    data: () => ({
+        /* Хрень для тени при наведении */
+        reviews: 413,
+        value: 4.5,
+        /*Валидация*/
+        dictionary: {
+            custom: {
+                name: {
+                    required: () => 'Поле не должно быть пустым',
+                    max: 'Поле не должно превышать 50 символов'
+                },
+                description: {
+                    required: () => 'Поле не должно быть пустым',
+                },
+                employeeSelKey: {
+                    required: () => 'Поле не должно быть пустым',
+                },
+                scope: {
+                    required: () => 'Поле не должно быть пустым',
+                },
+                matching: {
+                    required: () => 'Поле не должно быть пустым',
+                },
+                priority: {
+                    required: () => 'Поле не должно быть пустым',
+                },
+                state: {
+                    required: () => 'Поле не должно быть пустым',
+                }
+            }
+        },
+
+        /* Нормальные переменные */
+        dialog: false,
+        employee: {},
+        taskRRM: {},
+        newTask: {
+            name: null,
+            description: null,
+            employeeSelKey: null,
+            scope: null,
+            matching: null,
+            whoIns: '',
+            priority: '',
+            state: '1',
+            requestSD: '',
+            organizationSelKey: '',
+            initiator: '',
+            requestJiraURL: [{
+                url: ''
+            }],
+
+        },
+        scope: ['Сопровождение', 'Доп. сопровождение', 'Инвест. программа'],
+        matching: ['Согласовано в ПАО', 'Согласовано в ИНФОРМ', 'В процессе', 'Не требует'],
+        priorityObj: [{
+                orderBy: '4',
+                title: 'Низкий',
+                color: 'lime'
+            },
+            {
+                orderBy: '3',
+                title: 'Средний',
+                color: 'light-green'
+            },
+            {
+                orderBy: '2',
+                title: 'Высокий',
+                color: 'purple'
+            },
+            {
+                orderBy: '1',
+                title: 'Блокирующий',
+                color: 'red'
+            },
+        ],
+
+        editedIndex: 1,
+        editedIndexForUpdate: null,
+    }),
+
+    methods: {
+        close() {
+            this.dialog = false;
+            this.newTask = {
+                state: '1',
+                requestJiraURL: [{
+                    url: ''
+                }]
+            };
+            this.$validator.reset();
+            this.editedIndex = 1;
+            this.editedIndexForUpdate = null
+        },
+        editItem(item) {
+
+            this.editedIndexForUpdate = item['.key'];
+            this.editedIndex = 2
+            this.newTask = Object.assign({}, item);
+            this.dialog = true;
+
+            console.log('TCL: editItem -> item', item);
+        },
+
+        save() {
+
+            this.$validator.validateAll().then((result) => {
+                if (result) {
+                    this.newTask.whoIns = this.$store.getters.userLoginSett.email;
+                    if (this.editedIndex === 1) {
+                        this.$firebaseRefs.taskRRM.push(this.newTask);
+                    } else {
+                        const copy = this.newTask;
+                        delete copy['.key'];
+                        this.$firebaseRefs.taskRRM.child(this.editedIndexForUpdate).set(copy)
+                        console.log(this.editedIndexForUpdate);
+                    }
+
+                    this.close()
+
+                } else {
+                    console.log("validation failed");
+
+                }
+            }).catch(() => {
+                console.log('TCL: save -> errors', errors);
+            })
+
+        },
+        deleteItem(item) {
+            confirm('Удалить запись?') && this.$firebaseRefs.taskRRM.child(item['.key']).remove()
+        },
+        key: item => item['.key'],
+        /* Сортировка */
+        even: function (arr) {
+            // Set slice() to avoid to generate an infinite loop!
+            return arr.slice().sort(function (a, b) {
+                return a.priority - b.priority;
+            });
+        },
+        addJira: function () {
+            this.newTask.requestJiraURL.push({
+                url: ''
+            });
+        },
+        deleteJira: function (key) {
+            this.newTask.requestJiraURL.splice(key, 1);
+        }
+    },
+    firebase: {
+        employee: db.ref('employee'),
+        employeeObj: {
+            source: db.ref('employee'),
+            asObject: true
+        },
+        taskRRM: db.ref('taskRRM'),
+        organization: db.ref('organization')
+    },
+    mounted() {
+        /*Валидация*/
+        this.$validator.localize('ru', this.dictionary)
+    },
+    computed: {
+        formTitle() {
+            return this.editedIndex === 1 ? 'Новая задача' : 'Редактировать задачу'
+        }
+    }
+}
+</script>
 
 <style>
 

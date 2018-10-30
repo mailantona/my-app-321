@@ -1,48 +1,70 @@
 <template>
-<v-container fluid grid-list-md>
-    <v-layout row wrap>
-        <v-flex d-flex xs12 sm6 md4>
-            <v-card color="purple" dark>
-                <v-card-title primary class="title">Lorem</v-card-title>
-                <v-card-text>{{ lorem }}</v-card-text>
-            </v-card>
-        </v-flex>
-        <v-flex d-flex xs12 sm6 md3>
-            <v-layout row wrap>
-                <v-flex d-flex>
-                    <v-card color="indigo" dark>
-                        <v-card-text>{{ lorem.slice(0, 70) }}</v-card-text>
-                    </v-card>
-                </v-flex>
-                <v-flex d-flex>
-                    <v-layout row wrap>
-                        <v-flex v-for="n in 2" :key="n" d-flex xs12>
-                            <v-card color="red lighten-2" dark>
-                                <v-card-text>{{ lorem.slice(0, 40) }}</v-card-text>
-                            </v-card>
-                        </v-flex>
-                    </v-layout>
-                </v-flex>
-            </v-layout>
-        </v-flex>
-        <v-flex d-flex xs12 sm6 md2 child-flex>
-            <v-card color="green lighten-2" dark>
-                <v-card-text>{{ lorem.slice(0, 90) }}</v-card-text>
-            </v-card>
-        </v-flex>
-        <v-flex d-flex xs12 sm6 md3>
-            <v-card color="blue lighten-2" dark>
-                <v-card-text>{{ lorem.slice(0, 100) }}</v-card-text>
-            </v-card>
-        </v-flex>
-    </v-layout>
-</v-container>
+<v-layout justify-center>
+    <v-flex xs12 sm6>
+        <v-toolbar color="indigo" dark>
+            <v-toolbar-side-icon></v-toolbar-side-icon>
+            <v-toolbar-title>Discover</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon>
+                <v-icon>search</v-icon>
+            </v-btn>
+        </v-toolbar>
+
+        <v-card>
+            <v-container fluid grid-list-md>
+                <v-layout row wrap>
+                    <v-flex v-for="card in cards" v-bind="{ [`xs${card.flex}`]: true }" :key="card.title">
+                        <v-card>
+                            <v-img :src="card.src" height="200px">
+                                <v-container fill-height fluid pa-2>
+                                    <v-layout fill-height>
+                                        <v-flex xs12 align-end flexbox>
+                                            <span class="headline white--text" v-text="card.title"></span>
+                                        </v-flex>
+                                    </v-layout>
+                                </v-container>
+                            </v-img>
+
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn icon>
+                                    <v-icon>favorite</v-icon>
+                                </v-btn>
+                                <v-btn icon>
+                                    <v-icon>bookmark</v-icon>
+                                </v-btn>
+                                <v-btn icon>
+                                    <v-icon>share</v-icon>
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+        </v-card>
+    </v-flex>
+</v-layout>
 </template>
 
 <script>
 export default {
     data: () => ({
-        lorem: `Lorem ipsum dolor sit amet, mel at clita quando. Te sit oratio vituperatoribus, nam ad ipsum posidonium mediocritatem, explicari dissentiunt cu mea. Repudiare disputationi vim in, mollis iriure nec cu, alienum argumentum ius ad. Pri eu justo aeque torquatos.`
+        cards: [{
+                title: 'Pre-fab homes',
+                src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
+                flex: 12
+            },
+            {
+                title: 'Favorite road trips',
+                src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg',
+                flex: 6
+            },
+            {
+                title: 'Best airlines',
+                src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg',
+                flex: 6
+            }
+        ]
     })
 }
 </script>
