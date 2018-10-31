@@ -92,7 +92,7 @@
                                     <span class="subheading white--text">{{task.name}}</span>
 
                                 </v-card-title>
-                                <v-list two-line>
+                                <v-list three-line>
                                     <v-list-tile>
                                         <v-list-tile-content>
                                             <v-list-tile-sub-title>{{task.description}} {{task.state}}</v-list-tile-sub-title>
@@ -109,9 +109,9 @@
                                     <v-btn @click="editItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
                                         <v-icon>edit</v-icon>
                                     </v-btn>
-                                    <v-btn @click="deleteItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
+                                    <!-- <v-btn @click="deleteItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
                                         <v-icon>delete</v-icon>
-                                    </v-btn>
+                                    </v-btn> -->
                                 </v-card-actions>
                             </v-card>
                         </v-hover>
