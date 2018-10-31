@@ -3,9 +3,13 @@
 </template>
 
 <script>
-export default {
-
-}
+  export default {
+    data () {
+      return {
+        dialog: false
+      }
+    }
+  }
 </script>
 
 <style scoped>
