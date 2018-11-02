@@ -13,7 +13,7 @@
                 <v-card-text>
                     <v-layout wrap>
                         <v-flex>
-                            <v-text-field v-model="editedItem.name" label="Организация" :counter="50" required v-validate="'required|max:50'" :error-messages="errors.collect('name')" data-vv-name="name"></v-text-field>
+                            <v-text-field v-model="editedItem.name" label="Организация" :counter="100" required v-validate="'required|max:100'" :error-messages="errors.collect('name')" data-vv-name="name"></v-text-field>
                         </v-flex>
                     </v-layout>
                 </v-card-text>
@@ -86,7 +86,7 @@ export default {
             custom: {
                 name: {
                     required: () => 'Поле не должно быть пустым',
-                    max: 'Поле не должно превышать 50 символов'
+                    max: 'Поле не должно превышать 100 символов'
                 }
             }
         },

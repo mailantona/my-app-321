@@ -23,13 +23,13 @@
                             </v-flex>
                             <v-flex xs6>
                                 <v-radio-group v-model="newTask.state" row required v-validate="'required'" :error-messages="errors.collect('state')" data-vv-name="state">
-                                    <v-radio color="blue" default="true" label="Новая" value="1"></v-radio>
+                                    <v-radio color="blue" default="true" label="Ожидание" value="1"></v-radio>
                                     <v-radio color="blue" label="В работе" value="2"></v-radio>
                                     <v-radio color="blue" label="Готово" value="3"></v-radio>
                                 </v-radio-group>
                             </v-flex>
                             <v-flex xs6>
-                                <v-select :items="status" v-model="newTask.status" item-text="title" item-value="id" label="Статус" required v-validate="'required'" :error-messages="errors.collect('status')" data-vv-name="status"></v-select>
+                                <v-select :items="status" v-model="newTask.status" item-text="title" item-value="id" label="Этап" required v-validate="'required'" :error-messages="errors.collect('status')" data-vv-name="status"></v-select>
                             </v-flex>
                             <v-flex xs12>
                                 <span class="headline">Дополнительно</span>
@@ -46,7 +46,7 @@
                                 <span class="headline">Service Desk</span>
                             </v-flex>
                             <v-flex xs4>
-                                <v-text-field v-model="newTask.requestSD" label="Номер заявки"></v-text-field>
+                                <v-text-field v-model="newTask.requestSD" label="Номер заявки и Дата"></v-text-field>
                             </v-flex>
                             <v-flex xs4>
                                 <v-select :items="organization" item-text="name" :item-value="key" v-model="newTask.organizationSelKey" label="Организация"></v-select>
@@ -93,11 +93,14 @@
                     Детали
                 </v-card-title>
                 <v-card-text>
-                    <p>Jira</p>
-                    <ul>
-                        <li v-for="(jiraURL, index) in newTask.requestJiraURL" :key="index">{{jiraURL.url}}</li>
-                    </ul>
-                    <!-- {{newTask}} -->
+                    <v-list dense subheader>
+                        <v-subheader style="height:25px">Jira:</v-subheader>
+                        <v-list-tile style="height:30px" v-for="(jiraURL, index) in newTask.requestJiraURL" :key="index">
+                            <v-list-tile-content>
+                                <v-list-tile-sub-title> <a :href="jiraURL.url" target="_blank">{{jiraURL.url}}</a> </v-list-tile-sub-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                    </v-list>
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
@@ -119,7 +122,7 @@
                 <span class="headline" v-if="n === 3">Готово</span>
                 <v-divider class="mb-2"></v-divider>
                 <v-layout row wrap>
-                    <v-flex xs12 sm12 md12 lg12 xl6 v-for="task in even(taskRRM)" :key="task['.key']" v-if="task.state === n.toString()">
+                    <v-flex xs12 sm12 md12 lg12 xl6 v-for="(task, index) in even(taskRRM)" :key="index" v-if="task.state === n.toString()">
                         <v-hover>
                             <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`">
                                 <v-card-title :class="priorityObj.find(x => x.orderBy === task.priority).color.toString()">
@@ -139,7 +142,7 @@
                                 <v-list>
                                     <v-list-tile>
                                         <v-list-tile-content>
-                                            <v-list-tile-title class="body-2">Статсус: {{status.find(x => x.id === task.status).title.toString()}}</v-list-tile-title>
+                                            <v-list-tile-title class="body-2">Этап: {{status.find(x => x.id === task.status).title.toString()}}</v-list-tile-title>
                                             <v-list-tile-sub-title>
                                                 <v-progress-linear :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" height="10" :value="status.find(x => x.id === task.status).value.toString()"></v-progress-linear>
                                             </v-list-tile-sub-title>
@@ -147,7 +150,7 @@
                                     </v-list-tile>
                                 </v-list>
                                 <v-card-actions>
-                                    <v-btn @click="showDescription(task)"  :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>Детали</v-btn>
+                                    <v-btn @click="showDescription(task)" :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>Детали</v-btn>
                                     <v-spacer></v-spacer>
                                     <v-btn @click="editItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
                                         <v-icon>edit</v-icon>
@@ -156,6 +159,14 @@
                                         <v-icon>delete</v-icon>
                                     </v-btn> -->
                                 </v-card-actions>
+                                <v-alert :value="countProperties(task)" type="warning">
+                                    Заполнены не все поля!
+                                </v-alert>
+
+                                <!-- <v-btn color="success" @click="countProperties(task)">Success</v-btn> -->
+                                <!-- <v-alert v-for="(value, key) in task" :key="key" v-if="value===''" :value="true" type="warning">
+                                    {{value}} {{key}}
+                                </v-alert> -->
 
                             </v-card>
                         </v-hover>
@@ -230,6 +241,7 @@ export default {
             status: ''
 
         },
+        newTaskCount: 14,
         scope: ['Сопровождение', 'Доп. сопровождение', 'Инвест. программа'],
         matching: ['Согласовано в ПАО', 'Согласовано в ИНФОРМ', 'В процессе', 'Не требует'],
         priorityObj: [{
@@ -255,33 +267,48 @@ export default {
         ],
         status: [{
                 id: '1',
+                value: '1',
+                title: 'Новая'
+            },
+            {
+                id: '2',
                 value: '5',
                 title: 'Предварительный анализ'
             },
             {
-                id: '2',
+                id: '3',
                 value: '25',
                 title: 'Составление ЧТЗ'
             },
             {
-                id: '3',
+                id: '4',
                 value: '40',
                 title: 'Разработка'
             },
             {
-                id: '4',
-                value: '60',
-                title: 'Тестирование/Доработка'
+                id: '5',
+                value: '50',
+                title: 'Тестирование'
             },
             {
-                id: '5',
+                id: '6',
+                value: '60',
+                title: 'Доработка'
+            },
+            {
+                id: '7',
                 value: '80',
                 title: 'Комплексное тестирование'
             },
             {
-                id: '6',
-                value: '90',
+                id: '8',
+                value: '95',
                 title: 'Для внедрения'
+            },
+            {
+                id: '8',
+                value: '100',
+                title: 'Установлено'
             },
         ],
 
@@ -315,7 +342,7 @@ export default {
         showDescription(item) {
             this.newTask = Object.assign({}, item);
             this.dialogDescriptionVal = true;
-            
+
         },
 
         save() {
@@ -323,6 +350,11 @@ export default {
             this.$validator.validateAll().then((result) => {
                 if (result) {
                     this.newTask.whoIns = this.$store.getters.userLoginSett.email;
+                    /* if (!this.newTask.requestJiraURL) {
+                        this.newTask.requestJiraURL = [{
+                            url: ''
+                        }];
+                    }; */
                     if (this.editedIndex === 1) {
                         this.$firebaseRefs.taskRRM.push(this.newTask);
                     } else {
@@ -360,8 +392,28 @@ export default {
             });
         },
         deleteJira: function (key) {
-            this.newTask.requestJiraURL.splice(key, 1);
+            if (key !== 0) {
+                this.newTask.requestJiraURL.splice(key, 1);
+                console.log('TCL: key', key);
+            }
         },
+        countProperties: function (obj) {
+            let alertMessages = false
+            if (Object.keys(obj).length < this.newTaskCount) {
+                alertMessages = true;
+            }
+            if (obj.requestJiraURL[0].url ==='') {
+                alertMessages = true;
+            }
+            for (var key in obj) {
+                if (obj[key] === '') {
+                    alertMessages = true;
+                }
+            }
+            return alertMessages
+            console.log('as', alertMessages);
+        }
+
         /* addBook: function () {
             this.$bindAsObject('customers', db.ref('books').limitToFirst(this.num))
         } */
