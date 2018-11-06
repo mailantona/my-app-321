@@ -21,6 +21,7 @@ npm run dev
 npm run build
 ```
 firebase init
+set "NODE_TLS_REJECT_UNAUTHORIZED=0" - if Token Fetch Error
 firebase deploy
 
 For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
