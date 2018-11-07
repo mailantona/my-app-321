@@ -22,6 +22,7 @@ npm run build
 ```
 firebase init
 set "NODE_TLS_REJECT_UNAUTHORIZED=0" - if Token Fetch Error
+npm config set strict-ssl false - if UNABLE_TO_VERIFY_LEAF_SIGNATURE
 firebase deploy
 
 For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).

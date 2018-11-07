@@ -1,5 +1,7 @@
 <template>
 <div>
+    <!-- <pre>{{organization1}}</pre> -->
+
     <v-toolbar flat color="grey lighten-5">
         <v-toolbar-title>Задачи АРМ РРМ</v-toolbar-title>
         <v-divider class="mx-2" inset vertical></v-divider>
@@ -85,6 +87,7 @@
             </v-card>
 
         </v-dialog>
+        <v-btn color="blue" v-on:click="onexport()" dark class="mb-2">Excel</v-btn>
 
         <!-- Второе окно *****************************************************************************************************************-->
         <v-dialog v-model="dialogDescriptionVal" width="500px">
@@ -131,18 +134,19 @@
                                 <v-list three-line>
                                     <v-list-tile>
                                         <v-list-tile-content>
-                                            <v-list-tile-sub-title>{{task.description}}</v-list-tile-sub-title>
+                                            <v-list-tile-sub-title class="caption">{{task.description}}</v-list-tile-sub-title>
                                         </v-list-tile-content>
-                                        <v-list-tile-avatar>
-                                            <img v-for="epm in employee" :key="epm['.key']" v-if="epm['.key'] === task.employeeSelKey" :src="epm.avatarURL">
-                                            <!-- {{employee.find(x => x['.key'] === task.employeeSelKey).avatarURL.toString()}} -->
-                                        </v-list-tile-avatar>
+
                                     </v-list-tile>
                                 </v-list>
                                 <v-list>
                                     <v-list-tile>
+                                        <v-list-tile-avatar>
+                                            <img v-for="epm in employee" :key="epm['.key']" v-if="epm['.key'] === task.employeeSelKey" :src="epm.avatarURL">
+                                            <!-- {{employee.find(x => x['.key'] === task.employeeSelKey).avatarURL.toString()}} -->
+                                        </v-list-tile-avatar>
                                         <v-list-tile-content>
-                                            <v-list-tile-title class="body-2">Этап: {{status.find(x => x.id === task.status).title.toString()}}</v-list-tile-title>
+                                            <v-list-tile-title class="body-2">{{status.find(x => x.id === task.status).title.toString()}}</v-list-tile-title>
                                             <v-list-tile-sub-title>
                                                 <v-progress-linear :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" height="10" :value="status.find(x => x.id === task.status).value.toString()"></v-progress-linear>
                                             </v-list-tile-sub-title>
@@ -176,6 +180,7 @@
             <!-- Задачи конец *****************************************************************************************************************-->
         </v-layout>
     </v-container>
+
 </div>
 </template>
 
@@ -183,6 +188,16 @@
 import {
     db
 } from '../config/firebase.js';
+import XLSX from 'xlsx';
+import { functions } from 'firebase';
+/* 
+let eventKey = "-LQIta5sxifMqgB2D3Au"
+var rootRef = db.ref()
+var employeeRef = rootRef.child('employee')
+var taskRRMRef = rootRef.child('taskRRM') */
+
+/* let qwe4 = taskRRMRef.child(eventKey).once('value', snap => console.log(snap.val())); */
+
 export default {
     data: () => ({
         /* Хрень для тени при наведении */
@@ -273,7 +288,7 @@ export default {
             {
                 id: '2',
                 value: '5',
-                title: 'Предварительный анализ'
+                title: 'Анализ'
             },
             {
                 id: '3',
@@ -314,10 +329,49 @@ export default {
 
         editedIndex: 1,
         editedIndexForUpdate: null,
-        dialogDescriptionVal: false
+        dialogDescriptionVal: false,
+        animals: [{
+            "name": "cat",
+            "category": "animal"
+        }, {
+            "name": "dog",
+            "category": "animal"
+        }, {
+            "name": "pig",
+            "category": "animal"
+        }]
     }),
 
     methods: {
+        onexport() {
+
+            let eventKey = {}
+            var rootRef = db.ref()
+            var employeeRef = rootRef.child('employee')
+            var taskRRMRef = rootRef.child('taskRRM');
+
+            taskRRMRef.on('child_added', function(snap){
+                
+                console.log(snap.val());
+
+                employeeRef.child(snap.val().employeeSelKey).once('value', user => {
+                    console.log(user.val());
+                })
+            }).toJSON();
+            
+
+
+
+
+
+            //let qwe4 = employeeRef.child(eventKey).once('value', snap => console.log(snap.val()));
+
+
+            /* var animalWS = XLSX.utils.json_to_sheet(this.organization1);
+            var wb = XLSX.utils.book_new()
+            XLSX.utils.book_append_sheet(wb, animalWS, 'animals')
+            XLSX.writeFile(wb, 'book.xlsx') */
+        },
         close() {
             this.dialog = false;
             this.newTask = {
@@ -376,7 +430,7 @@ export default {
 
         },
         deleteItem(item) {
-            confirm('Удалить запись?') && this.$firebaseRefs.taskRRM.child(item['.key']).remove()
+            confirm('Удалить запись?') && taskRRMRef.child(item['.key']).remove()
         },
         key: item => item['.key'],
         /* Сортировка */
@@ -402,7 +456,7 @@ export default {
             if (Object.keys(obj).length < this.newTaskCount) {
                 alertMessages = true;
             }
-            if (obj.requestJiraURL[0].url ==='') {
+            if (obj.requestJiraURL[0].url === '') {
                 alertMessages = true;
             }
             for (var key in obj) {
@@ -425,7 +479,9 @@ export default {
             asObject: true
         },
         taskRRM: db.ref('taskRRM'),
-        organization: db.ref('organization')
+        organization: db.ref('organization'),
+        /*  organization1: qwe4 */
+
     },
     mounted() {
         /*Валидация*/
