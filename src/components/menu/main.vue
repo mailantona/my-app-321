@@ -2,7 +2,6 @@
 <div>
 
     <p>Coming soon</p>
-    <button type="button" v-on:click="onexport()">Excel download</button>
 
 </div>
 </template>

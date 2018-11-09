@@ -1,7 +1,5 @@
 <template>
 <div>
-    <!-- <pre>{{organization1}}</pre> -->
-
     <v-toolbar flat color="grey lighten-5">
         <v-toolbar-title>Задачи АРМ РРМ</v-toolbar-title>
         <v-divider class="mx-2" inset vertical></v-divider>
@@ -25,9 +23,7 @@
                             </v-flex>
                             <v-flex xs6>
                                 <v-radio-group v-model="newTask.state" row required v-validate="'required'" :error-messages="errors.collect('state')" data-vv-name="state">
-                                    <v-radio color="blue" default="true" label="Ожидание" value="1"></v-radio>
-                                    <v-radio color="blue" label="В работе" value="2"></v-radio>
-                                    <v-radio color="blue" label="Готово" value="3"></v-radio>
+                                    <v-radio v-for="(st, index) in state" :key="index" color="blue" default="true" :label="st.title" :value="st.id"></v-radio>
                                 </v-radio-group>
                             </v-flex>
                             <v-flex xs6>
@@ -128,7 +124,7 @@
                     <v-flex xs12 sm12 md12 lg12 xl6 v-for="(task, index) in even(taskRRM)" :key="index" v-if="task.state === n.toString()">
                         <v-hover>
                             <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`">
-                                <v-card-title :class="priorityObj.find(x => x.orderBy === task.priority).color.toString()">
+                                <v-card-title :class="getColor(task.priority)">
                                     <span class="subheading white--text">{{task.name}}</span>
                                 </v-card-title>
                                 <v-list three-line>
@@ -136,7 +132,6 @@
                                         <v-list-tile-content>
                                             <v-list-tile-sub-title class="caption">{{task.description}}</v-list-tile-sub-title>
                                         </v-list-tile-content>
-
                                     </v-list-tile>
                                 </v-list>
                                 <v-list>
@@ -146,17 +141,17 @@
                                             <!-- {{employee.find(x => x['.key'] === task.employeeSelKey).avatarURL.toString()}} -->
                                         </v-list-tile-avatar>
                                         <v-list-tile-content>
-                                            <v-list-tile-title class="body-2">{{status.find(x => x.id === task.status).title.toString()}}</v-list-tile-title>
+                                            <v-list-tile-title class="body-2">{{getStatus(task.status , 1)}}</v-list-tile-title>
                                             <v-list-tile-sub-title>
-                                                <v-progress-linear :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" height="10" :value="status.find(x => x.id === task.status).value.toString()"></v-progress-linear>
+                                                <v-progress-linear :color="getColor(task.priority)" height="10" :value="getStatus(task.status, 2)"></v-progress-linear>
                                             </v-list-tile-sub-title>
                                         </v-list-tile-content>
                                     </v-list-tile>
                                 </v-list>
                                 <v-card-actions>
-                                    <v-btn @click="showDescription(task)" :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>Детали</v-btn>
+                                    <v-btn @click="showDescription(task)" :color="getColor(task.priority)" flat>Детали</v-btn>
                                     <v-spacer></v-spacer>
-                                    <v-btn @click="editItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
+                                    <v-btn @click="editItem(task)" icon :color="getColor(task.priority)" flat>
                                         <v-icon>edit</v-icon>
                                     </v-btn>
                                     <!-- <v-btn @click="deleteItem(task)" icon :color="priorityObj.find(x => x.orderBy === task.priority).color.toString()" flat>
@@ -166,12 +161,6 @@
                                 <v-alert :value="countProperties(task)" type="warning">
                                     Заполнены не все поля!
                                 </v-alert>
-
-                                <!-- <v-btn color="success" @click="countProperties(task)">Success</v-btn> -->
-                                <!-- <v-alert v-for="(value, key) in task" :key="key" v-if="value===''" :value="true" type="warning">
-                                    {{value}} {{key}}
-                                </v-alert> -->
-
                             </v-card>
                         </v-hover>
                     </v-flex>
@@ -189,15 +178,9 @@ import {
     db
 } from '../config/firebase.js';
 import XLSX from 'xlsx';
-import { functions } from 'firebase';
-/* 
-let eventKey = "-LQIta5sxifMqgB2D3Au"
-var rootRef = db.ref()
-var employeeRef = rootRef.child('employee')
-var taskRRMRef = rootRef.child('taskRRM') */
-
-/* let qwe4 = taskRRMRef.child(eventKey).once('value', snap => console.log(snap.val())); */
-
+import {
+    functions
+} from 'firebase';
 export default {
     data: () => ({
         /* Хрень для тени при наведении */
@@ -233,7 +216,6 @@ export default {
                 },
             }
         },
-
         /* Нормальные переменные */
         dialog: false,
         employee: {},
@@ -254,123 +236,112 @@ export default {
                 url: ''
             }],
             status: ''
-
         },
+        state: [{
+                id: "1",
+                title: "Ожидание"
+            },
+            {
+                id: "2",
+                title: "В работе"
+            },
+            {
+                id: "3",
+                title: "Готово"
+            },
+        ],
         newTaskCount: 14,
         scope: ['Сопровождение', 'Доп. сопровождение', 'Инвест. программа'],
         matching: ['Согласовано в ПАО', 'Согласовано в ИНФОРМ', 'В процессе', 'Не требует'],
-        priorityObj: [{
-                orderBy: '4',
-                title: 'Низкий',
-                color: 'lime'
-            },
-            {
-                orderBy: '3',
-                title: 'Средний',
-                color: 'light-green'
-            },
-            {
-                orderBy: '2',
-                title: 'Высокий',
-                color: 'purple'
-            },
-            {
-                orderBy: '1',
-                title: 'Блокирующий',
-                color: 'red'
-            },
-        ],
-        status: [{
-                id: '1',
-                value: '1',
-                title: 'Новая'
-            },
-            {
-                id: '2',
-                value: '5',
-                title: 'Анализ'
-            },
-            {
-                id: '3',
-                value: '25',
-                title: 'Составление ЧТЗ'
-            },
-            {
-                id: '4',
-                value: '40',
-                title: 'Разработка'
-            },
-            {
-                id: '5',
-                value: '50',
-                title: 'Тестирование'
-            },
-            {
-                id: '6',
-                value: '60',
-                title: 'Доработка'
-            },
-            {
-                id: '7',
-                value: '80',
-                title: 'Комплексное тестирование'
-            },
-            {
-                id: '8',
-                value: '95',
-                title: 'Для внедрения'
-            },
-            {
-                id: '8',
-                value: '100',
-                title: 'Установлено'
-            },
-        ],
-
         editedIndex: 1,
         editedIndexForUpdate: null,
-        dialogDescriptionVal: false,
-        animals: [{
-            "name": "cat",
-            "category": "animal"
-        }, {
-            "name": "dog",
-            "category": "animal"
-        }, {
-            "name": "pig",
-            "category": "animal"
-        }]
+        dialogDescriptionVal: false
     }),
+    firebase: {
+        employee: db.ref('employee'),
+        employeeObj: {
+            source: db.ref('employee'),
+            asObject: true
+        },
+        taskRRM: db.ref('taskRRM'),
+        organization: db.ref('organization'),
+        priorityObj: db.ref('priorityObj'),
+        status: db.ref('status'),
+
+    },
 
     methods: {
-        onexport() {
+        /*Поиск название цвета в priorityObj. Не знаю как убрать ошибку - написал try*/
+        getColor(ColorID) {
+            //JSON.parse(JSON.stringify(priorityObj))
+            try {
+                return this.priorityObj.find(x => x.orderBy.toString() === ColorID).color.toString();
+            } catch (error) {
+                //console.log(error);
+            }
+        },
+        /*Поиск процента выполнения. Не знаю как убрать ошибку - написал try*/
+        getStatus(statusID, paramID) {
+            try {
+                if (paramID === 1) {
+                    return this.status.find(x => x.id.toString() === statusID).title.toString();
+                } else {
+                    return this.status.find(x => x.id.toString() === statusID).value.toString();
+                }
 
-            let eventKey = {}
+            } catch (error) {
+                //console.log(error);
+            }
+        },
+        onexport() {
             var rootRef = db.ref()
             var employeeRef = rootRef.child('employee')
             var taskRRMRef = rootRef.child('taskRRM');
+            var organizationRRMRef = rootRef.child('organization');
+            var statusRef = rootRef.child('status');
+            var valColl = [];
+            var stateOnexport = this.state;
 
-            taskRRMRef.on('child_added', function(snap){
-                
-                console.log(snap.val());
+            taskRRMRef.on('child_added', function (task) {
+                /*объект в Массив*/
+                var requestJiraURLArray = task.val().requestJiraURL.map(function (item) {
+                    return item['url'];
+                });
+                //console.log(task.val());
+                employeeRef.child(task.val().employeeSelKey).once('value', user => {
+                    //console.log(user.val());
+                    organizationRRMRef.child(task.val().organizationSelKey).once('value', org => {
+                        //console.log(org.val());
+                        statusRef.child(task.val().status).once('value', str => {
+                            //console.log(str.val());
+                            valColl.push({
+                                "Заголовок": task.val().name,
+                                "Описание": task.val().description,
+                                "Инициатор": task.val().initiator,
+                                "Ответственный": user.val().name,
+                                "Согласование": task.val().matching,
+                                "Приоритет": task.val().priority,
+                                "Service Desk": task.val().requestSD,
+                                "Рамки выполнения": task.val().scope,
+                                "Состояние": stateOnexport.find(x => x.id.toString() === task.val().state).title.toString(),
+                                "Статус": str.val().title,
+                                "Jira": requestJiraURLArray.join(" "),
+                                "Организация-Заказчик": org.val().name,
+                            })
 
-                employeeRef.child(snap.val().employeeSelKey).once('value', user => {
-                    console.log(user.val());
+                        })
+
+                    })
+
                 })
-            }).toJSON();
-            
 
+            })
+            console.log('TCL: onexport -> valColl', valColl);
 
-
-
-
-            //let qwe4 = employeeRef.child(eventKey).once('value', snap => console.log(snap.val()));
-
-
-            /* var animalWS = XLSX.utils.json_to_sheet(this.organization1);
+            var list1 = XLSX.utils.json_to_sheet(valColl);
             var wb = XLSX.utils.book_new()
-            XLSX.utils.book_append_sheet(wb, animalWS, 'animals')
-            XLSX.writeFile(wb, 'book.xlsx') */
+            XLSX.utils.book_append_sheet(wb, list1, 'Задачи АРМ РРМ')
+            XLSX.writeFile(wb, 'Задачи АРМРРМ ' + new Date() + '.xlsx')
         },
         close() {
             this.dialog = false;
@@ -472,17 +443,6 @@ export default {
             this.$bindAsObject('customers', db.ref('books').limitToFirst(this.num))
         } */
     },
-    firebase: {
-        employee: db.ref('employee'),
-        employeeObj: {
-            source: db.ref('employee'),
-            asObject: true
-        },
-        taskRRM: db.ref('taskRRM'),
-        organization: db.ref('organization'),
-        /*  organization1: qwe4 */
-
-    },
     mounted() {
         /*Валидация*/
         this.$validator.localize('ru', this.dictionary)
@@ -490,7 +450,8 @@ export default {
     computed: {
         formTitle() {
             return this.editedIndex === 1 ? 'Новая задача' : 'Редактировать задачу'
-        }
+        },
+
     }
 }
 </script>
