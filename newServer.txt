@@ -1,0 +1,8 @@
+Установка MY SQL:
+sudo apt update
+sudo apt install mysql-server
+
+
+Полезные команды:
+sudo netstat -ntulp    	КАК ПОСМОТРЕТЬ ОТКРЫТЫЕ ПОРТЫ В LINUX
+ps aux               	Как посмотреть список процессов из терминала в Ubuntu 

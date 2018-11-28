@@ -20,7 +20,6 @@ const routes = [
         component: TaskRRM
     },
     {
-        name: 'directory',
         path: "/directory/:id",
         component: directory
     },

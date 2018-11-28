@@ -35,7 +35,7 @@
     <v-toolbar :clipped-left="$vuetify.breakpoint.lgAndUp" color="blue" dark fixed app dense>
         <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
         <v-spacer></v-spacer>
-        v0.0.12
+        v0.0.16
         <v-spacer></v-spacer>
         {{this.$store.getters.userLoginSett.email}}
     </v-toolbar>
